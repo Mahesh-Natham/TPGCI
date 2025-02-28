@@ -1,0 +1,11 @@
+../Drivers/Simulink/TPGCI.c:83:15:rtGetNaN	4	static
+../Drivers/Simulink/TPGCI.c:89:17:rtGetNaNF	4	static
+../Drivers/Simulink/TPGCI.c:95:18:rtIsInf	16	static
+../Drivers/Simulink/TPGCI.c:101:18:rtIsInfF	16	static
+../Drivers/Simulink/TPGCI.c:107:18:rtIsNaN	16	static
+../Drivers/Simulink/TPGCI.c:113:18:rtIsNaNF	16	static
+../Drivers/Simulink/TPGCI.c:123:13:abcto	48	static
+../Drivers/Simulink/TPGCI.c:137:13:todq	56	static
+../Drivers/Simulink/TPGCI.c:148:8:rt_modd_snf	48	static
+../Drivers/Simulink/TPGCI.c:185:6:TPGCI_step	128	static
+../Drivers/Simulink/TPGCI.c:456:6:TPGCI_initialize	4	static

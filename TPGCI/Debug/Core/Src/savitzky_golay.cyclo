@@ -1,0 +1,2 @@
+../Core/Src/savitzky_golay.c:3:6:SavitzkyGolay_Init	2
+../Core/Src/savitzky_golay.c:12:7:SavitzkyGolay_Update	2

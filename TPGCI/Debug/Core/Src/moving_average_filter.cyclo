@@ -1,0 +1,2 @@
+../Core/Src/moving_average_filter.c:4:6:MovingAverageFilter_Init	2
+../Core/Src/moving_average_filter.c:18:7:MovingAverageFilter_Update	2

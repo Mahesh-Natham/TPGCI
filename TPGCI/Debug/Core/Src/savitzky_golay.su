@@ -1,0 +1,2 @@
+../Core/Src/savitzky_golay.c:3:6:SavitzkyGolay_Init	24	static
+../Core/Src/savitzky_golay.c:12:7:SavitzkyGolay_Update	24	static

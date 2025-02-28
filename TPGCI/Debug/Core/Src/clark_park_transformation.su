@@ -1,0 +1,4 @@
+../Core/Src/clark_park_transformation.c:5:6:abc_to_alpha_beta	32	static
+../Core/Src/clark_park_transformation.c:11:6:alpha_beta_to_dq	40	static
+../Core/Src/clark_park_transformation.c:20:6:dq_to_alpha_beta	40	static
+../Core/Src/clark_park_transformation.c:27:6:alpha_beta_to_abc	32	static
