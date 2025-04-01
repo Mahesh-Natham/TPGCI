@@ -1,0 +1,51 @@
+/*
+ * Academic License - for use in teaching, academic research, and meeting
+ * course requirements at degree granting institutions only.  Not for
+ * government, commercial, or other organizational use.
+ *
+ * File: TPGCI_STM32_4_data.c
+ *
+ * Code generated for Simulink model 'TPGCI_STM32_4'.
+ *
+ * Model version                  : 1.2
+ * Simulink Coder version         : 24.1 (R2024a) 19-Nov-2023
+ * C/C++ source code generated on : Mon Mar 31 15:17:32 2025
+ *
+ * Target selection: ert.tlc
+ * Embedded hardware selection: ARM Compatible->ARM Cortex-M
+ * Code generation objectives:
+ *    1. Execution efficiency
+ *    2. RAM efficiency
+ * Validation result: All passed
+ */
+
+#include "TPGCI_STM32_4.h"
+
+/* Invariant block signals (default storage) */
+const ConstB rtConstB = {
+  1U,                                  /* '<S169>/Compare' */
+  1U                                   /* '<S175>/Compare' */
+};
+
+/* Constant parameters (default storage) */
+const ConstP rtConstP = {
+  /* Pooled Parameter (Expression: [ 1   -1/2   -1/2; 0   sqrt(3)/2   -sqrt(3)/2; 1/2  1/2  1/2 ] )
+   * Referenced by:
+   *   '<S167>/Gain3'
+   *   '<S173>/Gain3'
+   */
+  { 1.0, 0.0, 0.5, -0.5, 0.8660254037844386, 0.5, -0.5, -0.8660254037844386, 0.5
+  },
+
+  /* Expression: [ 1   0   1; -1/2  sqrt(3)/2   1; -1/2  -sqrt(3)/2  1 ]
+   * Referenced by: '<S178>/Gain3'
+   */
+  { 1.0, -0.5, -0.5, 0.0, 0.8660254037844386, -0.8660254037844386, 1.0, 1.0, 1.0
+  }
+};
+
+/*
+ * File trailer for generated code.
+ *
+ * [EOF]
+ */

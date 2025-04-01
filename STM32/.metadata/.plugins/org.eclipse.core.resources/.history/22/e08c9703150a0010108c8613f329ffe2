@@ -1,0 +1,598 @@
+/*
+ * Academic License - for use in teaching, academic research, and meeting
+ * course requirements at degree granting institutions only.  Not for
+ * government, commercial, or other organizational use.
+ *
+ * File: TPGCI_STM32_2.c
+ *
+ * Code generated for Simulink model 'TPGCI_STM32_2'.
+ *
+ * Model version                  : 1.2
+ * Simulink Coder version         : 24.1 (R2024a) 19-Nov-2023
+ * C/C++ source code generated on : Wed Mar 26 12:56:42 2025
+ *
+ * Target selection: ert.tlc
+ * Embedded hardware selection: ARM Compatible->ARM Cortex-M
+ * Code generation objectives:
+ *    1. Execution efficiency
+ *    2. RAM efficiency
+ * Validation result: Not run
+ */
+
+#include "TPGCI_STM32_2.h"
+#include "rtwtypes.h"
+#include <math.h>
+#include <float.h>
+#include "math.h"
+
+/* Private macros used by the generated code to access rtModel */
+#ifndef rtmIsMajorTimeStep
+#define rtmIsMajorTimeStep(rtm)        (((rtm)->Timing.simTimeStep) == MAJOR_TIME_STEP)
+#endif
+
+#ifndef rtmIsMinorTimeStep
+#define rtmIsMinorTimeStep(rtm)        (((rtm)->Timing.simTimeStep) == MINOR_TIME_STEP)
+#endif
+
+#ifndef rtmSetTPtr
+#define rtmSetTPtr(rtm, val)           ((rtm)->Timing.t = (val))
+#endif
+
+/* Continuous states */
+X rtX;
+
+/* Disabled State Vector */
+XDis rtXDis;
+
+/* Block signals and states (default storage) */
+DW rtDW;
+
+/* External inputs (root inport signals with default storage) */
+ExtU rtU;
+
+/* External outputs (root outports fed by signals with default storage) */
+ExtY rtY;
+
+/* Real-time model */
+static RT_MODEL rtM_;
+RT_MODEL *const rtM = &rtM_;
+extern real_T rt_modd_snf(real_T u0, real_T u1);
+static void MATLABFunction1(real_T rtu_a, real_T rtu_b, real_T rtu_c, real_T
+  rtu_theta, real_T *rty_d, real_T *rty_q);
+
+/* private model entry point functions */
+extern void TPGCI_STM32_2_derivatives(void);
+static real_T rtGetNaN(void);
+static real32_T rtGetNaNF(void);
+extern real_T rtInf;
+extern real_T rtMinusInf;
+extern real_T rtNaN;
+extern real32_T rtInfF;
+extern real32_T rtMinusInfF;
+extern real32_T rtNaNF;
+static boolean_T rtIsInf(real_T value);
+static boolean_T rtIsInfF(real32_T value);
+static boolean_T rtIsNaN(real_T value);
+static boolean_T rtIsNaNF(real32_T value);
+real_T rtNaN = -(real_T)NAN;
+real_T rtInf = (real_T)INFINITY;
+real_T rtMinusInf = -(real_T)INFINITY;
+real32_T rtNaNF = -(real32_T)NAN;
+real32_T rtInfF = (real32_T)INFINITY;
+real32_T rtMinusInfF = -(real32_T)INFINITY;
+
+/* Return rtNaN needed by the generated code. */
+static real_T rtGetNaN(void)
+{
+  return rtNaN;
+}
+
+/* Return rtNaNF needed by the generated code. */
+static real32_T rtGetNaNF(void)
+{
+  return rtNaNF;
+}
+
+/* Test if value is infinite */
+static boolean_T rtIsInf(real_T value)
+{
+  return (boolean_T)((value==rtInf || value==rtMinusInf) ? 1U : 0U);
+}
+
+/* Test if single-precision value is infinite */
+static boolean_T rtIsInfF(real32_T value)
+{
+  return (boolean_T)(((value)==rtInfF || (value)==rtMinusInfF) ? 1U : 0U);
+}
+
+/* Test if value is not a number */
+static boolean_T rtIsNaN(real_T value)
+{
+  return (boolean_T)(isnan(value) != 0);
+}
+
+/* Test if single-precision value is not a number */
+static boolean_T rtIsNaNF(real32_T value)
+{
+  return (boolean_T)(isnan(value) != 0);
+}
+
+/*
+ * This function updates continuous states using the ODE3 fixed-step
+ * solver algorithm
+ */
+static void rt_ertODEUpdateContinuousStates(RTWSolverInfo *si )
+{
+  /* Solver Matrices */
+  static const real_T rt_ODE3_A[3] = {
+    1.0/2.0, 3.0/4.0, 1.0
+  };
+
+  static const real_T rt_ODE3_B[3][3] = {
+    { 1.0/2.0, 0.0, 0.0 },
+
+    { 0.0, 3.0/4.0, 0.0 },
+
+    { 2.0/9.0, 1.0/3.0, 4.0/9.0 }
+  };
+
+  time_T t = rtsiGetT(si);
+  time_T tnew = rtsiGetSolverStopTime(si);
+  time_T h = rtsiGetStepSize(si);
+  real_T *x = rtsiGetContStates(si);
+  ODE3_IntgData *id = (ODE3_IntgData *)rtsiGetSolverData(si);
+  real_T *y = id->y;
+  real_T *f0 = id->f[0];
+  real_T *f1 = id->f[1];
+  real_T *f2 = id->f[2];
+  real_T hB[3];
+  int_T i;
+  int_T nXc = 1;
+  rtsiSetSimTimeStep(si,MINOR_TIME_STEP);
+
+  /* Save the state values at time t in y, we'll use x as ynew. */
+  (void) memcpy(y, x,
+                (uint_T)nXc*sizeof(real_T));
+
+  /* Assumes that rtsiSetT and ModelOutputs are up-to-date */
+  /* f0 = f(t,y) */
+  rtsiSetdX(si, f0);
+  TPGCI_STM32_2_derivatives();
+
+  /* f(:,2) = feval(odefile, t + hA(1), y + f*hB(:,1), args(:)(*)); */
+  hB[0] = h * rt_ODE3_B[0][0];
+  for (i = 0; i < nXc; i++) {
+    x[i] = y[i] + (f0[i]*hB[0]);
+  }
+
+  rtsiSetT(si, t + h*rt_ODE3_A[0]);
+  rtsiSetdX(si, f1);
+  TPGCI_STM32_2_step();
+  TPGCI_STM32_2_derivatives();
+
+  /* f(:,3) = feval(odefile, t + hA(2), y + f*hB(:,2), args(:)(*)); */
+  for (i = 0; i <= 1; i++) {
+    hB[i] = h * rt_ODE3_B[1][i];
+  }
+
+  for (i = 0; i < nXc; i++) {
+    x[i] = y[i] + (f0[i]*hB[0] + f1[i]*hB[1]);
+  }
+
+  rtsiSetT(si, t + h*rt_ODE3_A[1]);
+  rtsiSetdX(si, f2);
+  TPGCI_STM32_2_step();
+  TPGCI_STM32_2_derivatives();
+
+  /* tnew = t + hA(3);
+     ynew = y + f*hB(:,3); */
+  for (i = 0; i <= 2; i++) {
+    hB[i] = h * rt_ODE3_B[2][i];
+  }
+
+  for (i = 0; i < nXc; i++) {
+    x[i] = y[i] + (f0[i]*hB[0] + f1[i]*hB[1] + f2[i]*hB[2]);
+  }
+
+  rtsiSetT(si, tnew);
+  rtsiSetSimTimeStep(si,MAJOR_TIME_STEP);
+}
+
+/*
+ * Output and update for atomic system:
+ *    '<Root>/MATLAB Function1'
+ *    '<Root>/MATLAB Function2'
+ */
+static void MATLABFunction1(real_T rtu_a, real_T rtu_b, real_T rtu_c, real_T
+  rtu_theta, real_T *rty_d, real_T *rty_q)
+{
+  *rty_d = ((sin(rtu_theta - 2.0943951023931948) * rtu_b + rtu_a * sin(rtu_theta))
+            + sin(rtu_theta + 2.0943951023931948) * rtu_c) * 0.66666666666666663;
+  *rty_q = ((cos(rtu_theta - 2.0943951023931948) * rtu_b + rtu_a * cos(rtu_theta))
+            + cos(rtu_theta + 2.0943951023931948) * rtu_c) * 0.66666666666666663;
+}
+
+real_T rt_modd_snf(real_T u0, real_T u1)
+{
+  real_T y;
+  y = u0;
+  if (u1 == 0.0) {
+    if (u0 == 0.0) {
+      y = u1;
+    }
+  } else if (rtIsNaN(u0) || rtIsNaN(u1) || rtIsInf(u0)) {
+    y = (rtNaN);
+  } else if (u0 == 0.0) {
+    y = 0.0 / u1;
+  } else if (rtIsInf(u1)) {
+    if ((u1 < 0.0) != (u0 < 0.0)) {
+      y = u1;
+    }
+  } else {
+    boolean_T yEq;
+    y = fmod(u0, u1);
+    yEq = (y == 0.0);
+    if ((!yEq) && (u1 > floor(u1))) {
+      real_T q;
+      q = fabs(u0 / u1);
+      yEq = !(fabs(q - floor(q + 0.5)) > DBL_EPSILON * q);
+    }
+
+    if (yEq) {
+      y = u1 * 0.0;
+    } else if ((u0 < 0.0) != (u1 < 0.0)) {
+      y += u1;
+    }
+  }
+
+  return y;
+}
+
+/* Model step function */
+void TPGCI_STM32_2_step(void)
+{
+  /* local block i/o variables */
+  real_T rtb_IntegralGain;
+  real_T rtb_FilterCoefficient;
+  real_T rtb_IntegralGain_o;
+  real_T rtb_IntegralGain_g;
+  real_T d;
+  real_T rtb_Add2;
+  real_T rtb_Divide;
+  real_T rtb_Mod1;
+  real_T rtb_Product2_idx_0;
+  real_T rtb_Product2_idx_1;
+  real_T rtb_Sum3;
+  real_T rtb_d;
+  real_T rtb_q;
+  real_T rtb_q_e;
+  if (rtmIsMajorTimeStep(rtM)) {
+    /* set solver stop time */
+    rtsiSetSolverStopTime(&rtM->solverInfo,((rtM->Timing.clockTick0+1)*
+      rtM->Timing.stepSize0));
+  }                                    /* end MajorTimeStep */
+
+  /* Update absolute time of base rate at minor time step */
+  if (rtmIsMinorTimeStep(rtM)) {
+    rtM->Timing.t[0] = rtsiGetT(&rtM->solverInfo);
+  }
+
+  /* Math: '<Root>/Mod1' incorporates:
+   *  Constant: '<Root>/Constant3'
+   *  Integrator: '<Root>/Integrator'
+   */
+  rtb_Mod1 = rt_modd_snf(rtX.Integrator_CSTATE, 6.2831853071795862);
+
+  /* MATLAB Function: '<Root>/MATLAB Function1' incorporates:
+   *  Inport: '<Root>/Ia_g'
+   *  Inport: '<Root>/Ib_g'
+   *  Inport: '<Root>/Ic_g'
+   */
+  MATLABFunction1(rtU.Ia_g, rtU.Ib_g, rtU.Ic_g, rtb_Mod1, &rtb_d, &rtb_q_e);
+
+  /* Gain: '<Root>/Gain2' */
+  rtb_Sum3 = -rtb_d;
+
+  /* Sum: '<Root>/Sum8' incorporates:
+   *  Gain: '<Root>/Gain2'
+   *  Inport: '<Root>/Id_ref'
+   */
+  rtb_d = rtU.Id_ref - (-rtb_d);
+  if (rtmIsMajorTimeStep(rtM)) {
+    /* Sum: '<S100>/Sum' incorporates:
+     *  DiscreteIntegrator: '<S91>/Integrator'
+     *  Gain: '<S96>/Proportional Gain'
+     */
+    d = 0.001 * rtb_d + rtDW.Integrator_DSTATE;
+
+    /* Saturate: '<S98>/Saturation' */
+    if (d > 5.0) {
+      /* Outport: '<Root>/pi_out' */
+      rtY.pi_out = 5.0;
+    } else if (d < -5.0) {
+      /* Outport: '<Root>/pi_out' */
+      rtY.pi_out = -5.0;
+    } else {
+      /* Outport: '<Root>/pi_out' */
+      rtY.pi_out = d;
+    }
+
+    /* End of Saturate: '<S98>/Saturation' */
+  }
+
+  /* MATLAB Function: '<Root>/MATLAB Function2' incorporates:
+   *  Inport: '<Root>/Va_g'
+   *  Inport: '<Root>/Vb_g'
+   *  Inport: '<Root>/Vc_g'
+   */
+  MATLABFunction1(rtU.Va_g, rtU.Vb_g, rtU.Vc_g, rtb_Mod1, &d, &rtb_q);
+  if (rtmIsMajorTimeStep(rtM)) {
+    /* MATLAB Function: '<Root>/RMS Exp' */
+    if (!rtDW.rmsSquared_not_empty) {
+      rtDW.rmsSquared = d * d;
+      rtDW.rmsSquared_not_empty = true;
+    }
+
+    rtDW.rmsSquared = d * d * 0.01 + 0.99 * rtDW.rmsSquared;
+
+    /* Outport: '<Root>/Vd_g' incorporates:
+     *  MATLAB Function: '<Root>/RMS Exp'
+     */
+    rtY.Vd_g = rtDW.rmsSquared;
+    rtY.Vd_g = sqrt(rtY.Vd_g);
+  }
+
+  /* Sum: '<Root>/Sum10' incorporates:
+   *  Gain: '<Root>/Gain4'
+   *  Outport: '<Root>/Vd_g'
+   *  Outport: '<Root>/pi_out'
+   *  Sum: '<Root>/Sum9'
+   */
+  d = (0.15707963267948966 * rtb_q_e + rtY.pi_out) + rtY.Vd_g;
+
+  /* Product: '<Root>/Divide' incorporates:
+   *  Constant: '<Root>/Constant'
+   *  Inport: '<Root>/VDC'
+   *  Product: '<Root>/Product'
+   */
+  rtb_Divide = d * 2.0 / rtU.VDC;
+
+  /* Sum: '<Root>/Sum11' incorporates:
+   *  Inport: '<Root>/Iq_ref'
+   */
+  rtb_q_e = rtU.Iq_ref - rtb_q_e;
+  if (rtmIsMajorTimeStep(rtM)) {
+    /* Sum: '<S150>/Sum' incorporates:
+     *  DiscreteIntegrator: '<S141>/Integrator'
+     *  Gain: '<S146>/Proportional Gain'
+     */
+    rtDW.Sum = 0.001 * rtb_q_e + rtDW.Integrator_DSTATE_p;
+  }
+
+  /* Product: '<Root>/Divide1' incorporates:
+   *  Constant: '<Root>/Constant9'
+   *  Gain: '<Root>/Gain5'
+   *  Inport: '<Root>/VDC'
+   *  Product: '<Root>/Product1'
+   *  Sum: '<Root>/Sum12'
+   *  Sum: '<Root>/Sum13'
+   */
+  rtb_Sum3 = ((rtDW.Sum - 0.15707963267948966 * rtb_Sum3) + rtb_q) * 2.0 /
+    rtU.VDC;
+
+  /* Sum: '<Root>/Add2' incorporates:
+   *  Gain: '<Root>/Gain1'
+   *  Inport: '<Root>/phase delay'
+   */
+  rtb_Add2 = 0.017453292519943295 * rtU.phasedelay + rtb_Mod1;
+
+  /* MATLAB Function: '<Root>/MATLAB Function3' */
+  rtb_Product2_idx_0 = rtb_Divide * sin(rtb_Add2) + rtb_Sum3 * cos(rtb_Add2);
+
+  /* Saturate: '<Root>/Saturation' */
+  if (rtb_Product2_idx_0 > 0.95) {
+    rtb_Product2_idx_0 = 0.95;
+  } else if (rtb_Product2_idx_0 < -0.95) {
+    rtb_Product2_idx_0 = -0.95;
+  }
+
+  /* MATLAB Function: '<Root>/MATLAB Function3' */
+  rtb_Product2_idx_1 = sin(rtb_Add2 - 2.0943951023931948) * rtb_Divide + cos
+    (rtb_Add2 - 2.0943951023931948) * rtb_Sum3;
+
+  /* Saturate: '<Root>/Saturation' */
+  if (rtb_Product2_idx_1 > 0.95) {
+    rtb_Product2_idx_1 = 0.95;
+  } else if (rtb_Product2_idx_1 < -0.95) {
+    rtb_Product2_idx_1 = -0.95;
+  }
+
+  /* MATLAB Function: '<Root>/MATLAB Function3' */
+  rtb_Sum3 = sin(rtb_Add2 + 2.0943951023931948) * rtb_Divide + cos(rtb_Add2 +
+    2.0943951023931948) * rtb_Sum3;
+
+  /* Saturate: '<Root>/Saturation' */
+  if (rtb_Sum3 > 0.95) {
+    rtb_Sum3 = 0.95;
+  } else if (rtb_Sum3 < -0.95) {
+    rtb_Sum3 = -0.95;
+  }
+
+  /* Outport: '<Root>/m_abc' */
+  rtY.m_abc[0] = rtb_Product2_idx_0;
+  rtY.m_abc[1] = rtb_Product2_idx_1;
+  rtY.m_abc[2] = rtb_Sum3;
+
+  /* Outport: '<Root>/PWMch1' incorporates:
+   *  Constant: '<Root>/Constant2'
+   *  Gain: '<Root>/Gain'
+   *  Inport: '<Root>/CCR_max'
+   *  Outport: '<Root>/m_abc'
+   *  Product: '<Root>/Product2'
+   *  Sum: '<Root>/Add1'
+   *  Sum: '<Root>/Sum'
+   */
+  rtY.PWMch1 = rtU.CCR_max - (rtb_Product2_idx_0 + 1.0) * 0.5 * rtU.CCR_max;
+
+  /* Outport: '<Root>/PWMch2' incorporates:
+   *  Constant: '<Root>/Constant2'
+   *  Gain: '<Root>/Gain'
+   *  Inport: '<Root>/CCR_max'
+   *  Outport: '<Root>/m_abc'
+   *  Product: '<Root>/Product2'
+   *  Sum: '<Root>/Add1'
+   *  Sum: '<Root>/Sum2'
+   */
+  rtY.PWMch2 = rtU.CCR_max - (rtb_Product2_idx_1 + 1.0) * 0.5 * rtU.CCR_max;
+
+  /* Outport: '<Root>/PWMch3' incorporates:
+   *  Constant: '<Root>/Constant2'
+   *  Gain: '<Root>/Gain'
+   *  Inport: '<Root>/CCR_max'
+   *  Outport: '<Root>/m_abc'
+   *  Product: '<Root>/Product2'
+   *  Sum: '<Root>/Add1'
+   *  Sum: '<Root>/Sum3'
+   */
+  rtY.PWMch3 = rtU.CCR_max - (rtb_Sum3 + 1.0) * 0.5 * rtU.CCR_max;
+
+  /* Outport: '<Root>/m_d' */
+  rtY.m_d = rtb_Divide;
+
+  /* Outport: '<Root>/Vdc_cal' */
+  rtY.Vdc_cal = d;
+
+  /* Outport: '<Root>/Vq_g' */
+  rtY.Vq_g = rtb_q;
+  if (rtmIsMajorTimeStep(rtM)) {
+    /* Gain: '<S138>/Integral Gain' */
+    rtb_IntegralGain = rtb_q_e;
+
+    /* Gain: '<S44>/Filter Coefficient' incorporates:
+     *  DiscreteIntegrator: '<S36>/Filter'
+     *  Gain: '<S34>/Derivative Gain'
+     *  Sum: '<S36>/SumD'
+     */
+    rtb_FilterCoefficient = (0.0 * rtb_q - rtDW.Filter_DSTATE) * 100.0;
+
+    /* Sum: '<S50>/Sum' incorporates:
+     *  DiscreteIntegrator: '<S41>/Integrator'
+     *  Gain: '<S46>/Proportional Gain'
+     */
+    rtDW.Sum_o = (10.0 * rtb_q + rtDW.Integrator_DSTATE_i) +
+      rtb_FilterCoefficient;
+
+    /* Gain: '<S38>/Integral Gain' */
+    rtb_IntegralGain_o = 10000.0 * rtb_q;
+
+    /* Gain: '<S88>/Integral Gain' */
+    rtb_IntegralGain_g = rtb_d;
+  }
+
+  /* Outport: '<Root>/Theta_g' */
+  rtY.Theta_g = rtb_Mod1;
+  if (rtmIsMajorTimeStep(rtM)) {
+    if (rtmIsMajorTimeStep(rtM)) {
+      /* Update for DiscreteIntegrator: '<S91>/Integrator' */
+      rtDW.Integrator_DSTATE += 4.0E-5 * rtb_IntegralGain_g;
+      if (rtDW.Integrator_DSTATE > 5.0) {
+        rtDW.Integrator_DSTATE = 5.0;
+      } else if (rtDW.Integrator_DSTATE < -5.0) {
+        rtDW.Integrator_DSTATE = -5.0;
+      }
+
+      /* End of Update for DiscreteIntegrator: '<S91>/Integrator' */
+
+      /* Update for DiscreteIntegrator: '<S141>/Integrator' */
+      rtDW.Integrator_DSTATE_p += 4.0E-5 * rtb_IntegralGain;
+
+      /* Update for DiscreteIntegrator: '<S36>/Filter' */
+      rtDW.Filter_DSTATE += 4.0E-5 * rtb_FilterCoefficient;
+
+      /* Update for DiscreteIntegrator: '<S41>/Integrator' */
+      rtDW.Integrator_DSTATE_i += 4.0E-5 * rtb_IntegralGain_o;
+    }
+  }                                    /* end MajorTimeStep */
+
+  if (rtmIsMajorTimeStep(rtM)) {
+    rt_ertODEUpdateContinuousStates(&rtM->solverInfo);
+
+    /* Update absolute time for base rate */
+    /* The "clockTick0" counts the number of times the code of this task has
+     * been executed. The absolute time is the multiplication of "clockTick0"
+     * and "Timing.stepSize0". Size of "clockTick0" ensures timer will not
+     * overflow during the application lifespan selected.
+     */
+    ++rtM->Timing.clockTick0;
+    rtM->Timing.t[0] = rtsiGetSolverStopTime(&rtM->solverInfo);
+
+    {
+      /* Update absolute timer for sample time: [4.0E-5s, 0.0s] */
+      /* The "clockTick1" counts the number of times the code of this task has
+       * been executed. The resolution of this integer timer is 4.0E-5, which is the step size
+       * of the task. Size of "clockTick1" ensures timer will not overflow during the
+       * application lifespan selected.
+       */
+      rtM->Timing.clockTick1++;
+    }
+  }                                    /* end MajorTimeStep */
+}
+
+/* Derivatives for root system: '<Root>' */
+void TPGCI_STM32_2_derivatives(void)
+{
+  XDot *_rtXdot;
+  _rtXdot = ((XDot *) rtM->derivs);
+
+  /* Derivatives for Integrator: '<Root>/Integrator' */
+  _rtXdot->Integrator_CSTATE = rtDW.Sum_o;
+}
+
+/* Model initialize function */
+void TPGCI_STM32_2_initialize(void)
+{
+  /* Registration code */
+  {
+    /* Setup solver object */
+    rtsiSetSimTimeStepPtr(&rtM->solverInfo, &rtM->Timing.simTimeStep);
+    rtsiSetTPtr(&rtM->solverInfo, &rtmGetTPtr(rtM));
+    rtsiSetStepSizePtr(&rtM->solverInfo, &rtM->Timing.stepSize0);
+    rtsiSetdXPtr(&rtM->solverInfo, &rtM->derivs);
+    rtsiSetContStatesPtr(&rtM->solverInfo, (real_T **) &rtM->contStates);
+    rtsiSetNumContStatesPtr(&rtM->solverInfo, &rtM->Sizes.numContStates);
+    rtsiSetNumPeriodicContStatesPtr(&rtM->solverInfo,
+      &rtM->Sizes.numPeriodicContStates);
+    rtsiSetPeriodicContStateIndicesPtr(&rtM->solverInfo,
+      &rtM->periodicContStateIndices);
+    rtsiSetPeriodicContStateRangesPtr(&rtM->solverInfo,
+      &rtM->periodicContStateRanges);
+    rtsiSetContStateDisabledPtr(&rtM->solverInfo, (boolean_T**)
+      &rtM->contStateDisabled);
+    rtsiSetErrorStatusPtr(&rtM->solverInfo, (&rtmGetErrorStatus(rtM)));
+    rtsiSetRTModelPtr(&rtM->solverInfo, rtM);
+  }
+
+  rtsiSetSimTimeStep(&rtM->solverInfo, MAJOR_TIME_STEP);
+  rtsiSetIsMinorTimeStepWithModeChange(&rtM->solverInfo, false);
+  rtsiSetIsContModeFrozen(&rtM->solverInfo, false);
+  rtM->intgData.y = rtM->odeY;
+  rtM->intgData.f[0] = rtM->odeF[0];
+  rtM->intgData.f[1] = rtM->odeF[1];
+  rtM->intgData.f[2] = rtM->odeF[2];
+  rtM->contStates = ((X *) &rtX);
+  rtM->contStateDisabled = ((XDis *) &rtXDis);
+  rtM->Timing.tStart = (0.0);
+  rtsiSetSolverData(&rtM->solverInfo, (void *)&rtM->intgData);
+  rtsiSetSolverName(&rtM->solverInfo,"ode3");
+  rtmSetTPtr(rtM, &rtM->Timing.tArray[0]);
+  rtM->Timing.stepSize0 = 4.0E-5;
+
+  /* InitializeConditions for Integrator: '<Root>/Integrator' */
+  rtX.Integrator_CSTATE = 0.0;
+}
+
+/*
+ * File trailer for generated code.
+ *
+ * [EOF]
+ */

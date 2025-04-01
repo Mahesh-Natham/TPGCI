@@ -1,0 +1,18 @@
+15:21:01 **** Incremental Build of configuration Debug for project 10khz ****
+make -j16 all 
+arm-none-eabi-gcc "../Drivers/Simulink/TPGCI_STM32_4.c" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_PWR_LDO_SUPPLY -DUSE_HAL_DRIVER -DSTM32H723xx -c -I../Core/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../Drivers/CMSIS/Include -I../Drivers/Simulink -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/Simulink/TPGCI_STM32_4.d" -MT"Drivers/Simulink/TPGCI_STM32_4.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/Simulink/TPGCI_STM32_4.o"
+arm-none-eabi-gcc "../Drivers/Simulink/TPGCI_STM32_4_data.c" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_PWR_LDO_SUPPLY -DUSE_HAL_DRIVER -DSTM32H723xx -c -I../Core/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../Drivers/CMSIS/Include -I../Drivers/Simulink -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/Simulink/TPGCI_STM32_4_data.d" -MT"Drivers/Simulink/TPGCI_STM32_4_data.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/Simulink/TPGCI_STM32_4_data.o"
+arm-none-eabi-gcc -o "10khz.elf" @"objects.list"   -mcpu=cortex-m7 -T"P:\Projects\TPGCI\STM32\10khz\STM32H723ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="10khz.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: 10khz.elf
+ 
+arm-none-eabi-size  10khz.elf 
+arm-none-eabi-objdump -h -S 10khz.elf  > "10khz.list"
+   text	   data	    bss	    dec	    hex	filename
+  51176	    120	   3304	  54600	   d548	10khz.elf
+Finished building: default.size.stdout
+ 
+Finished building: 10khz.list
+ 
+
+15:21:02 Build Finished. 0 errors, 0 warnings. (took 959ms)
+

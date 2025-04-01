@@ -1,0 +1,528 @@
+/*
+ * Academic License - for use in teaching, academic research, and meeting
+ * course requirements at degree granting institutions only.  Not for
+ * government, commercial, or other organizational use.
+ *
+ * File: TPGCI_STM32.c
+ *
+ * Code generated for Simulink model 'TPGCI_STM32'.
+ *
+ * Model version                  : 1.6
+ * Simulink Coder version         : 24.1 (R2024a) 19-Nov-2023
+ * C/C++ source code generated on : Tue Mar 25 22:38:41 2025
+ *
+ * Target selection: ert.tlc
+ * Embedded hardware selection: ARM Compatible->ARM Cortex-M
+ * Code generation objectives:
+ *    1. Execution efficiency
+ *    2. RAM efficiency
+ * Validation result: Not run
+ */
+
+#include "TPGCI_STM32.h"
+#include <stdint.h>
+#include <math.h>
+#include <stdbool.h>
+#include <float.h>
+#include "math.h"
+
+/* Exported data definition */
+
+/* Volatile memory section */
+/* Definition for custom storage class: Volatile */
+volatile double CCR_max;               /* '<Root>/CCR_max' */
+volatile double Ia_g;                  /* '<Root>/Ia_g' */
+volatile double Ib_g;                  /* '<Root>/Ib_g' */
+volatile double Ic_g;                  /* '<Root>/Ic_g' */
+volatile double Id;                    /* '<Root>/Id' */
+volatile double Id_ref;                /* '<Root>/Id_ref' */
+volatile double Iq;                    /* '<Root>/Iq' */
+volatile double Iq_ref;                /* '<Root>/Iq_ref' */
+volatile double PWMch1;                /* '<Root>/PWMch1' */
+volatile double PWMch2;                /* '<Root>/PWMch2' */
+volatile double PWMch3;                /* '<Root>/PWMch3' */
+volatile double Theta_g;               /* '<Root>/Theta_g' */
+volatile double VDC;                   /* '<Root>/VDC' */
+volatile double Va_g;                  /* '<Root>/Va_g' */
+volatile double Vb_g;                  /* '<Root>/Vb_g' */
+volatile double Vc_g;                  /* '<Root>/Vc_g' */
+volatile double Vdc_cal;               /* '<Root>/Vdc_cal' */
+volatile double m_abc[3];              /* '<Root>/m_abc' */
+volatile double m_d;                   /* '<Root>/m_d' */
+volatile double phasedelay;            /* '<Root>/phase delay' */
+volatile double pi_out;                /* '<Root>/pi_out' */
+
+/* Block signals and states (default storage) */
+DW rtDW;
+
+/* External outputs (root outports fed by signals with default storage) */
+ExtY rtY;
+
+/* Real-time model */
+static RT_MODEL rtM_;
+RT_MODEL *const rtM = &rtM_;
+extern double rt_modd_snf(double u0, double u1);
+static void Subsystempi2delay(uint8_t rtu_Enable, const double rtu_alpha_beta[2],
+  double rtu_wt, double *rty_dq, double *rty_dq_j);
+static void Subsystem1(uint8_t rtu_Enable, const double rtu_alpha_beta[2],
+  double rtu_wt, double *rty_dq, double *rty_dq_e);
+static double rtGetNaN(void);
+static float rtGetNaNF(void);
+extern double rtInf;
+extern double rtMinusInf;
+extern double rtNaN;
+extern float rtInfF;
+extern float rtMinusInfF;
+extern float rtNaNF;
+static bool rtIsInf(double value);
+static bool rtIsInfF(float value);
+static bool rtIsNaN(double value);
+static bool rtIsNaNF(float value);
+double rtNaN = -(double)NAN;
+double rtInf = (double)INFINITY;
+double rtMinusInf = -(double)INFINITY;
+float rtNaNF = -(float)NAN;
+float rtInfF = (float)INFINITY;
+float rtMinusInfF = -(float)INFINITY;
+
+/* Return rtNaN needed by the generated code. */
+static double rtGetNaN(void)
+{
+  return rtNaN;
+}
+
+/* Return rtNaNF needed by the generated code. */
+static float rtGetNaNF(void)
+{
+  return rtNaNF;
+}
+
+/* Test if value is infinite */
+static bool rtIsInf(double value)
+{
+  return (bool)((value==rtInf || value==rtMinusInf) ? 1U : 0U);
+}
+
+/* Test if single-precision value is infinite */
+static bool rtIsInfF(float value)
+{
+  return (bool)(((value)==rtInfF || (value)==rtMinusInfF) ? 1U : 0U);
+}
+
+/* Test if value is not a number */
+static bool rtIsNaN(double value)
+{
+  return (bool)(isnan(value) != 0);
+}
+
+/* Test if single-precision value is not a number */
+static bool rtIsNaNF(float value)
+{
+  return (bool)(isnan(value) != 0);
+}
+
+/*
+ * Output and update for enable system:
+ *    '<S158>/Subsystem - pi//2 delay'
+ *    '<S164>/Subsystem - pi//2 delay'
+ */
+static void Subsystempi2delay(uint8_t rtu_Enable, const double rtu_alpha_beta[2],
+  double rtu_wt, double *rty_dq, double *rty_dq_j)
+{
+  /* Outputs for Enabled SubSystem: '<S158>/Subsystem - pi//2 delay' incorporates:
+   *  EnablePort: '<S162>/Enable'
+   */
+  if (rtu_Enable > 0) {
+    double tmp;
+    double tmp_0;
+
+    /* Fcn: '<S162>/Fcn' incorporates:
+     *  Fcn: '<S162>/Fcn1'
+     */
+    tmp = cos(rtu_wt);
+    tmp_0 = sin(rtu_wt);
+    *rty_dq = rtu_alpha_beta[0] * tmp_0 - rtu_alpha_beta[1] * tmp;
+
+    /* Fcn: '<S162>/Fcn1' */
+    *rty_dq_j = rtu_alpha_beta[0] * tmp + rtu_alpha_beta[1] * tmp_0;
+  }
+
+  /* End of Outputs for SubSystem: '<S158>/Subsystem - pi//2 delay' */
+}
+
+/*
+ * Output and update for enable system:
+ *    '<S158>/Subsystem1'
+ *    '<S164>/Subsystem1'
+ */
+static void Subsystem1(uint8_t rtu_Enable, const double rtu_alpha_beta[2],
+  double rtu_wt, double *rty_dq, double *rty_dq_e)
+{
+  /* Outputs for Enabled SubSystem: '<S158>/Subsystem1' incorporates:
+   *  EnablePort: '<S163>/Enable'
+   */
+  if (rtu_Enable > 0) {
+    double tmp;
+    double tmp_0;
+
+    /* Fcn: '<S163>/Fcn' incorporates:
+     *  Fcn: '<S163>/Fcn1'
+     */
+    tmp = sin(rtu_wt);
+    tmp_0 = cos(rtu_wt);
+    *rty_dq = rtu_alpha_beta[0] * tmp_0 + rtu_alpha_beta[1] * tmp;
+
+    /* Fcn: '<S163>/Fcn1' */
+    *rty_dq_e = -rtu_alpha_beta[0] * tmp + rtu_alpha_beta[1] * tmp_0;
+  }
+
+  /* End of Outputs for SubSystem: '<S158>/Subsystem1' */
+}
+
+double rt_modd_snf(double u0, double u1)
+{
+  double y;
+  y = u0;
+  if (u1 == 0.0) {
+    if (u0 == 0.0) {
+      y = u1;
+    }
+  } else if (rtIsNaN(u0) || rtIsNaN(u1) || rtIsInf(u0)) {
+    y = (rtNaN);
+  } else if (u0 == 0.0) {
+    y = 0.0 / u1;
+  } else if (rtIsInf(u1)) {
+    if ((u1 < 0.0) != (u0 < 0.0)) {
+      y = u1;
+    }
+  } else {
+    bool yEq;
+    y = fmod(u0, u1);
+    yEq = (y == 0.0);
+    if ((!yEq) && (u1 > floor(u1))) {
+      double q;
+      q = fabs(u0 / u1);
+      yEq = !(fabs(q - floor(q + 0.5)) > DBL_EPSILON * q);
+    }
+
+    if (yEq) {
+      y = u1 * 0.0;
+    } else if ((u0 < 0.0) != (u1 < 0.0)) {
+      y += u1;
+    }
+  }
+
+  return y;
+}
+
+/* Model step function */
+void TPGCI_STM32_step(void)
+{
+  double rtb_Gain1[3];
+  double rtb_Gain1_am[3];
+  double rtb_Add2;
+  double rtb_Divide;
+  double rtb_Divide1;
+  double rtb_Divide_idx_0_tmp;
+  double rtb_Divide_idx_0_tmp_0;
+  double rtb_Integrator_l;
+  double rtb_Mod1;
+  double rtb_Saturation;
+  double rtb_Sum11;
+  double rtb_Sum8;
+  double rtb_y;
+  int32_t i;
+  for (i = 0; i < 3; i++) {
+    /* Gain: '<S165>/Gain3' */
+    rtb_Mod1 = rtConstP.pooled4[i + 3];
+    rtb_Sum8 = rtConstP.pooled4[i];
+    rtb_Saturation = rtConstP.pooled4[i + 6];
+
+    /* Gain: '<S165>/Gain1' incorporates:
+     *  Gain: '<S165>/Gain3'
+     *  Inport: '<Root>/Ia_g'
+     *  Inport: '<Root>/Ib_g'
+     *  Inport: '<Root>/Ic_g'
+     */
+    rtb_Gain1[i] = ((rtb_Mod1 * Ib_g + rtb_Sum8 * Ia_g) + rtb_Saturation * Ic_g)
+      * 0.66666666666666663;
+
+    /* Gain: '<S159>/Gain1' incorporates:
+     *  Gain: '<S159>/Gain3'
+     *  Inport: '<Root>/Va_g'
+     *  Inport: '<Root>/Vb_g'
+     *  Inport: '<Root>/Vc_g'
+     */
+    rtb_Gain1_am[i] = ((rtb_Mod1 * Vb_g + rtb_Sum8 * Va_g) + rtb_Saturation *
+                       Vc_g) * 0.66666666666666663;
+  }
+
+  /* Outport: '<Root>/Iq' */
+  Iq = rtb_Gain1[2];
+
+  /* Math: '<Root>/Mod1' incorporates:
+   *  Constant: '<Root>/Constant3'
+   *  DiscreteIntegrator: '<Root>/Discrete-Time Integrator'
+   */
+  rtb_Mod1 = rt_modd_snf(rtDW.DiscreteTimeIntegrator_DSTATE, 6.2831853071795862);
+
+  /* Outputs for Enabled SubSystem: '<S164>/Subsystem1' */
+  Subsystem1(0, &rtb_Gain1[0], rtb_Mod1, &rtDW.Fcn_n, &rtDW.Fcn1_h);
+
+  /* End of Outputs for SubSystem: '<S164>/Subsystem1' */
+
+  /* Outputs for Enabled SubSystem: '<S164>/Subsystem - pi//2 delay' */
+  Subsystempi2delay(rtConstB.Compare_b, &rtb_Gain1[0], rtb_Mod1, &rtDW.Fcn_k1,
+                    &rtDW.Fcn1_j);
+
+  /* End of Outputs for SubSystem: '<S164>/Subsystem - pi//2 delay' */
+
+  /* Sum: '<Root>/Sum8' incorporates:
+   *  Inport: '<Root>/Id_ref'
+   *  Switch: '<S164>/Switch'
+   */
+  rtb_Sum8 = Id_ref - rtDW.Fcn_k1;
+
+  /* Sum: '<S100>/Sum' incorporates:
+   *  DiscreteIntegrator: '<S91>/Integrator'
+   *  Gain: '<S96>/Proportional Gain'
+   */
+  rtb_Saturation = 0.001 * rtb_Sum8 + rtDW.Integrator_DSTATE;
+
+  /* Saturate: '<S98>/Saturation' */
+  if (rtb_Saturation > 20.0) {
+    rtb_Saturation = 20.0;
+  } else if (rtb_Saturation < -20.0) {
+    rtb_Saturation = -20.0;
+  }
+
+  /* End of Saturate: '<S98>/Saturation' */
+
+  /* Outputs for Enabled SubSystem: '<S158>/Subsystem1' */
+  Subsystem1(0, &rtb_Gain1_am[0], rtb_Mod1, &rtDW.Fcn_a, &rtDW.Fcn1_ic);
+
+  /* End of Outputs for SubSystem: '<S158>/Subsystem1' */
+
+  /* Outputs for Enabled SubSystem: '<S158>/Subsystem - pi//2 delay' */
+  Subsystempi2delay(rtConstB.Compare_i, &rtb_Gain1_am[0], rtb_Mod1, &rtDW.Fcn_nk,
+                    &rtDW.Fcn1_l);
+
+  /* End of Outputs for SubSystem: '<S158>/Subsystem - pi//2 delay' */
+
+  /* MATLAB Function: '<Root>/RMS Exp' incorporates:
+   *  Switch: '<S158>/Switch'
+   */
+  if (!rtDW.rmsSquared_not_empty) {
+    rtDW.rmsSquared = rtDW.Fcn_nk * rtDW.Fcn_nk;
+    rtDW.rmsSquared_not_empty = true;
+  }
+
+  rtDW.rmsSquared = rtDW.Fcn_nk * rtDW.Fcn_nk * 0.01 + 0.99 * rtDW.rmsSquared;
+  rtb_y = sqrt(rtDW.rmsSquared);
+
+  /* End of MATLAB Function: '<Root>/RMS Exp' */
+
+  /* Sum: '<Root>/Sum10' incorporates:
+   *  Gain: '<Root>/Gain4'
+   *  Sum: '<Root>/Sum9'
+   *  Switch: '<S164>/Switch'
+   */
+  rtb_Integrator_l = (0.15707963267948966 * rtDW.Fcn1_j + rtb_Saturation) +
+    rtb_y;
+
+  /* Product: '<Root>/Divide' incorporates:
+   *  Constant: '<Root>/Constant'
+   *  Inport: '<Root>/VDC'
+   *  Product: '<Root>/Product'
+   */
+  rtb_Divide = rtb_Integrator_l * 2.0 / VDC;
+
+  /* Sum: '<Root>/Sum11' incorporates:
+   *  Inport: '<Root>/Iq_ref'
+   *  Switch: '<S164>/Switch'
+   */
+  rtb_Sum11 = Iq_ref - rtDW.Fcn1_j;
+
+  /* Sum: '<S150>/Sum' incorporates:
+   *  DiscreteIntegrator: '<S141>/Integrator'
+   *  Gain: '<S146>/Proportional Gain'
+   */
+  rtb_Add2 = 0.001 * rtb_Sum11 + rtDW.Integrator_DSTATE_e;
+
+  /* Saturate: '<S148>/Saturation' */
+  if (rtb_Add2 > 10.0) {
+    rtb_Add2 = 10.0;
+  } else if (rtb_Add2 < -10.0) {
+    rtb_Add2 = -10.0;
+  }
+
+  /* Product: '<Root>/Divide1' incorporates:
+   *  Constant: '<Root>/Constant9'
+   *  Gain: '<Root>/Gain5'
+   *  Inport: '<Root>/VDC'
+   *  Product: '<Root>/Product1'
+   *  Saturate: '<S148>/Saturation'
+   *  Sum: '<Root>/Sum12'
+   *  Sum: '<Root>/Sum13'
+   *  Switch: '<S158>/Switch'
+   *  Switch: '<S164>/Switch'
+   */
+  rtb_Divide1 = ((rtb_Add2 - 0.15707963267948966 * rtDW.Fcn_k1) + rtDW.Fcn1_l) *
+    2.0 / VDC;
+
+  /* Sum: '<Root>/Add2' incorporates:
+   *  Gain: '<Root>/Gain1'
+   *  Inport: '<Root>/phase delay'
+   */
+  rtb_Add2 = 0.017453292519943295 * phasedelay + rtb_Mod1;
+
+  /* Outputs for Enabled SubSystem: '<S171>/Subsystem - pi//2 delay' incorporates:
+   *  EnablePort: '<S174>/Enable'
+   */
+  /* Fcn: '<S174>/Fcn' incorporates:
+   *  Fcn: '<S174>/Fcn1'
+   */
+  rtb_Divide_idx_0_tmp = cos(rtb_Add2);
+  rtb_Divide_idx_0_tmp_0 = sin(rtb_Add2);
+
+  /* Switch: '<S171>/Switch' incorporates:
+   *  Fcn: '<S174>/Fcn'
+   *  Fcn: '<S174>/Fcn1'
+   */
+  rtb_Add2 = rtb_Divide * rtb_Divide_idx_0_tmp_0 + rtb_Divide1 *
+    rtb_Divide_idx_0_tmp;
+  rtb_Divide1 = -rtb_Divide * rtb_Divide_idx_0_tmp + rtb_Divide1 *
+    rtb_Divide_idx_0_tmp_0;
+
+  /* End of Outputs for SubSystem: '<S171>/Subsystem - pi//2 delay' */
+  for (i = 0; i < 3; i++) {
+    /* Gain: '<S170>/Gain3' incorporates:
+     *  Switch: '<S171>/Switch'
+     */
+    rtb_Divide_idx_0_tmp = (rtConstP.Gain3_Gain[i + 3] * rtb_Divide1 +
+      rtConstP.Gain3_Gain[i] * rtb_Add2) + rtConstP.Gain3_Gain[i + 6] * 0.0;
+
+    /* Saturate: '<Root>/Saturation' incorporates:
+     *  Gain: '<S170>/Gain3'
+     */
+    if (rtb_Divide_idx_0_tmp > 0.95) {
+      rtb_Divide_idx_0_tmp = 0.95;
+    } else if (rtb_Divide_idx_0_tmp < -0.95) {
+      rtb_Divide_idx_0_tmp = -0.95;
+    }
+
+    /* End of Saturate: '<Root>/Saturation' */
+
+    /* Outport: '<Root>/m_abc' */
+    m_abc[i] = rtb_Divide_idx_0_tmp;
+
+    /* Product: '<Root>/Product2' incorporates:
+     *  Constant: '<Root>/Constant2'
+     *  Gain: '<Root>/Gain'
+     *  Inport: '<Root>/CCR_max'
+     *  Sum: '<Root>/Add1'
+     */
+    rtb_Gain1[i] = (rtb_Divide_idx_0_tmp + 1.0) * 0.5 * CCR_max;
+  }
+
+  /* Outport: '<Root>/Vq_g' incorporates:
+   *  Switch: '<S158>/Switch'
+   */
+  rtY.Vq_g = rtDW.Fcn1_l;
+
+  /* Outport: '<Root>/Id' incorporates:
+   *  Switch: '<S164>/Switch'
+   */
+  Id = rtDW.Fcn_k1;
+
+  /* Outport: '<Root>/PWMch1' incorporates:
+   *  Inport: '<Root>/CCR_max'
+   *  Sum: '<Root>/Sum'
+   */
+  PWMch1 = CCR_max - rtb_Gain1[0];
+
+  /* Outport: '<Root>/PWMch2' incorporates:
+   *  Inport: '<Root>/CCR_max'
+   *  Sum: '<Root>/Sum2'
+   */
+  PWMch2 = CCR_max - rtb_Gain1[1];
+
+  /* Outport: '<Root>/PWMch3' incorporates:
+   *  Inport: '<Root>/CCR_max'
+   *  Sum: '<Root>/Sum3'
+   */
+  PWMch3 = CCR_max - rtb_Gain1[2];
+
+  /* Outport: '<Root>/m_d' */
+  m_d = rtb_Divide;
+
+  /* Outport: '<Root>/Vdc_cal' */
+  Vdc_cal = rtb_Integrator_l;
+
+  /* Outport: '<Root>/Vd_g' */
+  rtY.Vd_g = rtb_y;
+
+  /* Gain: '<S44>/Filter Coefficient' incorporates:
+   *  DiscreteIntegrator: '<S36>/Filter'
+   *  Gain: '<S34>/Derivative Gain'
+   *  Sum: '<S36>/SumD'
+   *  Switch: '<S158>/Switch'
+   */
+  rtb_Integrator_l = (0.0 * rtDW.Fcn1_l - rtDW.Filter_DSTATE) * 100.0;
+
+  /* Outport: '<Root>/pi_out' */
+  pi_out = rtb_Saturation;
+
+  /* Outport: '<Root>/Theta_g' */
+  Theta_g = rtb_Mod1;
+
+  /* Update for DiscreteIntegrator: '<Root>/Discrete-Time Integrator' incorporates:
+   *  DiscreteIntegrator: '<S41>/Integrator'
+   *  Gain: '<S46>/Proportional Gain'
+   *  Sum: '<S50>/Sum'
+   *  Switch: '<S158>/Switch'
+   */
+  rtDW.DiscreteTimeIntegrator_DSTATE += ((10.0 * rtDW.Fcn1_l +
+    rtDW.Integrator_DSTATE_f) + rtb_Integrator_l) * 4.0E-5;
+
+  /* Update for DiscreteIntegrator: '<S91>/Integrator' */
+  rtDW.Integrator_DSTATE += 4.0E-5 * rtb_Sum8;
+  if (rtDW.Integrator_DSTATE > 20.0) {
+    rtDW.Integrator_DSTATE = 20.0;
+  } else if (rtDW.Integrator_DSTATE < -20.0) {
+    rtDW.Integrator_DSTATE = -20.0;
+  }
+
+  /* End of Update for DiscreteIntegrator: '<S91>/Integrator' */
+
+  /* Update for DiscreteIntegrator: '<S141>/Integrator' */
+  rtDW.Integrator_DSTATE_e += 4.0E-5 * rtb_Sum11;
+  if (rtDW.Integrator_DSTATE_e > 10.0) {
+    rtDW.Integrator_DSTATE_e = 10.0;
+  } else if (rtDW.Integrator_DSTATE_e < -10.0) {
+    rtDW.Integrator_DSTATE_e = -10.0;
+  }
+
+  /* End of Update for DiscreteIntegrator: '<S141>/Integrator' */
+
+  /* Update for DiscreteIntegrator: '<S36>/Filter' */
+  rtDW.Filter_DSTATE += 4.0E-5 * rtb_Integrator_l;
+
+  /* Update for DiscreteIntegrator: '<S41>/Integrator' incorporates:
+   *  Gain: '<S38>/Integral Gain'
+   *  Switch: '<S158>/Switch'
+   */
+  rtDW.Integrator_DSTATE_f += 10000.0 * rtDW.Fcn1_l * 4.0E-5;
+}
+
+/* Model initialize function */
+void TPGCI_STM32_initialize(void)
+{
+  /* (no initialization code required) */
+}
+
+/*
+ * File trailer for generated code.
+ *
+ * [EOF]
+ */

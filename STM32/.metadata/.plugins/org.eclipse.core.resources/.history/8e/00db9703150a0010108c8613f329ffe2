@@ -1,0 +1,389 @@
+/*
+ * Academic License - for use in teaching, academic research, and meeting
+ * course requirements at degree granting institutions only.  Not for
+ * government, commercial, or other organizational use.
+ *
+ * File: TPGCI_STM32_2.h
+ *
+ * Code generated for Simulink model 'TPGCI_STM32_2'.
+ *
+ * Model version                  : 1.2
+ * Simulink Coder version         : 24.1 (R2024a) 19-Nov-2023
+ * C/C++ source code generated on : Wed Mar 26 12:56:42 2025
+ *
+ * Target selection: ert.tlc
+ * Embedded hardware selection: ARM Compatible->ARM Cortex-M
+ * Code generation objectives:
+ *    1. Execution efficiency
+ *    2. RAM efficiency
+ * Validation result: Not run
+ */
+
+#ifndef TPGCI_STM32_2_h_
+#define TPGCI_STM32_2_h_
+#ifndef TPGCI_STM32_2_COMMON_INCLUDES_
+#define TPGCI_STM32_2_COMMON_INCLUDES_
+#include "rtwtypes.h"
+#include "rtw_continuous.h"
+#include "rtw_solver.h"
+#include "math.h"
+#endif                                 /* TPGCI_STM32_2_COMMON_INCLUDES_ */
+
+#include <string.h>
+
+/* Macros for accessing real-time model data structure */
+#ifndef rtmGetErrorStatus
+#define rtmGetErrorStatus(rtm)         ((rtm)->errorStatus)
+#endif
+
+#ifndef rtmSetErrorStatus
+#define rtmSetErrorStatus(rtm, val)    ((rtm)->errorStatus = (val))
+#endif
+
+#ifndef rtmGetStopRequested
+#define rtmGetStopRequested(rtm)       ((rtm)->Timing.stopRequestedFlag)
+#endif
+
+#ifndef rtmSetStopRequested
+#define rtmSetStopRequested(rtm, val)  ((rtm)->Timing.stopRequestedFlag = (val))
+#endif
+
+#ifndef rtmGetStopRequestedPtr
+#define rtmGetStopRequestedPtr(rtm)    (&((rtm)->Timing.stopRequestedFlag))
+#endif
+
+#ifndef rtmGetT
+#define rtmGetT(rtm)                   (rtmGetTPtr((rtm))[0])
+#endif
+
+#ifndef rtmGetTPtr
+#define rtmGetTPtr(rtm)                ((rtm)->Timing.t)
+#endif
+
+#ifndef rtmGetTStart
+#define rtmGetTStart(rtm)              ((rtm)->Timing.tStart)
+#endif
+
+/* Forward declaration for rtModel */
+typedef struct tag_RTM RT_MODEL;
+
+/* Block signals and states (default storage) for system '<Root>' */
+typedef struct {
+  real_T Sum;                          /* '<S150>/Sum' */
+  real_T Sum_o;                        /* '<S50>/Sum' */
+  real_T Integrator_DSTATE;            /* '<S91>/Integrator' */
+  real_T Integrator_DSTATE_p;          /* '<S141>/Integrator' */
+  real_T Filter_DSTATE;                /* '<S36>/Filter' */
+  real_T Integrator_DSTATE_i;          /* '<S41>/Integrator' */
+  real_T rmsSquared;                   /* '<Root>/RMS Exp' */
+  boolean_T rmsSquared_not_empty;      /* '<Root>/RMS Exp' */
+} DW;
+
+/* Continuous states (default storage) */
+typedef struct {
+  real_T Integrator_CSTATE;            /* '<Root>/Integrator' */
+} X;
+
+/* State derivatives (default storage) */
+typedef struct {
+  real_T Integrator_CSTATE;            /* '<Root>/Integrator' */
+} XDot;
+
+/* State disabled  */
+typedef struct {
+  boolean_T Integrator_CSTATE;         /* '<Root>/Integrator' */
+} XDis;
+
+#ifndef ODE3_INTG
+#define ODE3_INTG
+
+/* ODE3 Integration Data */
+typedef struct {
+  real_T *y;                           /* output */
+  real_T *f[3];                        /* derivatives */
+} ODE3_IntgData;
+
+#endif
+
+/* External inputs (root inport signals with default storage) */
+typedef struct {
+  real_T Va_g;                         /* '<Root>/Va_g' */
+  real_T Vb_g;                         /* '<Root>/Vb_g' */
+  real_T Vc_g;                         /* '<Root>/Vc_g' */
+  real_T Ia_g;                         /* '<Root>/Ia_g' */
+  real_T Ib_g;                         /* '<Root>/Ib_g' */
+  real_T Ic_g;                         /* '<Root>/Ic_g' */
+  real_T CCR_max;                      /* '<Root>/CCR_max' */
+  real_T Id_ref;                       /* '<Root>/Id_ref' */
+  real_T VDC;                          /* '<Root>/VDC' */
+  real_T Iq_ref;                       /* '<Root>/Iq_ref' */
+  real_T phasedelay;                   /* '<Root>/phase delay' */
+} ExtU;
+
+/* External outputs (root outports fed by signals with default storage) */
+typedef struct {
+  real_T Theta_g;                      /* '<Root>/Theta_g' */
+  real_T m_abc[3];                     /* '<Root>/m_abc' */
+  real_T PWMch1;                       /* '<Root>/PWMch1' */
+  real_T PWMch2;                       /* '<Root>/PWMch2' */
+  real_T PWMch3;                       /* '<Root>/PWMch3' */
+  real_T pi_out;                       /* '<Root>/pi_out' */
+  real_T Vdc_cal;                      /* '<Root>/Vdc_cal' */
+  real_T Vd_g;                         /* '<Root>/Vd_g' */
+  real_T Vq_g;                         /* '<Root>/Vq_g' */
+  real_T m_d;                          /* '<Root>/m_d' */
+} ExtY;
+
+/* Real-time Model Data Structure */
+struct tag_RTM {
+  const char_T *errorStatus;
+  RTWSolverInfo solverInfo;
+  X *contStates;
+  int_T *periodicContStateIndices;
+  real_T *periodicContStateRanges;
+  real_T *derivs;
+  XDis *contStateDisabled;
+  boolean_T zCCacheNeedsReset;
+  boolean_T derivCacheNeedsReset;
+  boolean_T CTOutputIncnstWithState;
+  real_T odeY[1];
+  real_T odeF[3][1];
+  ODE3_IntgData intgData;
+
+  /*
+   * Sizes:
+   * The following substructure contains sizes information
+   * for many of the model attributes such as inputs, outputs,
+   * dwork, sample times, etc.
+   */
+  struct {
+    int_T numContStates;
+    int_T numPeriodicContStates;
+    int_T numSampTimes;
+  } Sizes;
+
+  /*
+   * Timing:
+   * The following substructure contains information regarding
+   * the timing information for the model.
+   */
+  struct {
+    uint32_T clockTick0;
+    time_T stepSize0;
+    uint32_T clockTick1;
+    time_T tStart;
+    SimTimeStep simTimeStep;
+    boolean_T stopRequestedFlag;
+    time_T *t;
+    time_T tArray[2];
+  } Timing;
+};
+
+/* Continuous states (default storage) */
+extern X rtX;
+
+/* Disabled states (default storage) */
+extern XDis rtXDis;
+
+/* Block signals and states (default storage) */
+extern DW rtDW;
+
+/* External inputs (root inport signals with default storage) */
+extern ExtU rtU;
+
+/* External outputs (root outports fed by signals with default storage) */
+extern ExtY rtY;
+
+/* Model entry point functions */
+extern void TPGCI_STM32_2_initialize(void);
+extern void TPGCI_STM32_2_step(void);
+
+/* Real-time Model object */
+extern RT_MODEL *const rtM;
+
+/*-
+ * These blocks were eliminated from the model due to optimizations:
+ *
+ * Block '<Root>/Scope4' : Unused code path elimination
+ */
+
+/*-
+ * The generated code includes comments that allow you to trace directly
+ * back to the appropriate location in the model.  The basic format
+ * is <system>/block_name, where system is the system number (uniquely
+ * assigned by Simulink) and block_name is the name of the block.
+ *
+ * Use the MATLAB hilite_system command to trace the generated code back
+ * to the model.  For example,
+ *
+ * hilite_system('<S3>')    - opens system 3
+ * hilite_system('<S3>/Kp') - opens and selects block Kp which resides in S3
+ *
+ * Here is the system hierarchy for this model
+ *
+ * '<Root>' : 'TPGCI_STM32_2'
+ * '<S1>'   : 'TPGCI_STM32_2/MATLAB Function1'
+ * '<S2>'   : 'TPGCI_STM32_2/MATLAB Function2'
+ * '<S3>'   : 'TPGCI_STM32_2/MATLAB Function3'
+ * '<S4>'   : 'TPGCI_STM32_2/PID Controller1'
+ * '<S5>'   : 'TPGCI_STM32_2/PID Controller4'
+ * '<S6>'   : 'TPGCI_STM32_2/PID Controller5'
+ * '<S7>'   : 'TPGCI_STM32_2/RMS Exp'
+ * '<S8>'   : 'TPGCI_STM32_2/PID Controller1/Anti-windup'
+ * '<S9>'   : 'TPGCI_STM32_2/PID Controller1/D Gain'
+ * '<S10>'  : 'TPGCI_STM32_2/PID Controller1/External Derivative'
+ * '<S11>'  : 'TPGCI_STM32_2/PID Controller1/Filter'
+ * '<S12>'  : 'TPGCI_STM32_2/PID Controller1/Filter ICs'
+ * '<S13>'  : 'TPGCI_STM32_2/PID Controller1/I Gain'
+ * '<S14>'  : 'TPGCI_STM32_2/PID Controller1/Ideal P Gain'
+ * '<S15>'  : 'TPGCI_STM32_2/PID Controller1/Ideal P Gain Fdbk'
+ * '<S16>'  : 'TPGCI_STM32_2/PID Controller1/Integrator'
+ * '<S17>'  : 'TPGCI_STM32_2/PID Controller1/Integrator ICs'
+ * '<S18>'  : 'TPGCI_STM32_2/PID Controller1/N Copy'
+ * '<S19>'  : 'TPGCI_STM32_2/PID Controller1/N Gain'
+ * '<S20>'  : 'TPGCI_STM32_2/PID Controller1/P Copy'
+ * '<S21>'  : 'TPGCI_STM32_2/PID Controller1/Parallel P Gain'
+ * '<S22>'  : 'TPGCI_STM32_2/PID Controller1/Reset Signal'
+ * '<S23>'  : 'TPGCI_STM32_2/PID Controller1/Saturation'
+ * '<S24>'  : 'TPGCI_STM32_2/PID Controller1/Saturation Fdbk'
+ * '<S25>'  : 'TPGCI_STM32_2/PID Controller1/Sum'
+ * '<S26>'  : 'TPGCI_STM32_2/PID Controller1/Sum Fdbk'
+ * '<S27>'  : 'TPGCI_STM32_2/PID Controller1/Tracking Mode'
+ * '<S28>'  : 'TPGCI_STM32_2/PID Controller1/Tracking Mode Sum'
+ * '<S29>'  : 'TPGCI_STM32_2/PID Controller1/Tsamp - Integral'
+ * '<S30>'  : 'TPGCI_STM32_2/PID Controller1/Tsamp - Ngain'
+ * '<S31>'  : 'TPGCI_STM32_2/PID Controller1/postSat Signal'
+ * '<S32>'  : 'TPGCI_STM32_2/PID Controller1/preSat Signal'
+ * '<S33>'  : 'TPGCI_STM32_2/PID Controller1/Anti-windup/Passthrough'
+ * '<S34>'  : 'TPGCI_STM32_2/PID Controller1/D Gain/Internal Parameters'
+ * '<S35>'  : 'TPGCI_STM32_2/PID Controller1/External Derivative/Error'
+ * '<S36>'  : 'TPGCI_STM32_2/PID Controller1/Filter/Disc. Forward Euler Filter'
+ * '<S37>'  : 'TPGCI_STM32_2/PID Controller1/Filter ICs/Internal IC - Filter'
+ * '<S38>'  : 'TPGCI_STM32_2/PID Controller1/I Gain/Internal Parameters'
+ * '<S39>'  : 'TPGCI_STM32_2/PID Controller1/Ideal P Gain/Passthrough'
+ * '<S40>'  : 'TPGCI_STM32_2/PID Controller1/Ideal P Gain Fdbk/Disabled'
+ * '<S41>'  : 'TPGCI_STM32_2/PID Controller1/Integrator/Discrete'
+ * '<S42>'  : 'TPGCI_STM32_2/PID Controller1/Integrator ICs/Internal IC'
+ * '<S43>'  : 'TPGCI_STM32_2/PID Controller1/N Copy/Disabled'
+ * '<S44>'  : 'TPGCI_STM32_2/PID Controller1/N Gain/Internal Parameters'
+ * '<S45>'  : 'TPGCI_STM32_2/PID Controller1/P Copy/Disabled'
+ * '<S46>'  : 'TPGCI_STM32_2/PID Controller1/Parallel P Gain/Internal Parameters'
+ * '<S47>'  : 'TPGCI_STM32_2/PID Controller1/Reset Signal/Disabled'
+ * '<S48>'  : 'TPGCI_STM32_2/PID Controller1/Saturation/Passthrough'
+ * '<S49>'  : 'TPGCI_STM32_2/PID Controller1/Saturation Fdbk/Disabled'
+ * '<S50>'  : 'TPGCI_STM32_2/PID Controller1/Sum/Sum_PID'
+ * '<S51>'  : 'TPGCI_STM32_2/PID Controller1/Sum Fdbk/Disabled'
+ * '<S52>'  : 'TPGCI_STM32_2/PID Controller1/Tracking Mode/Disabled'
+ * '<S53>'  : 'TPGCI_STM32_2/PID Controller1/Tracking Mode Sum/Passthrough'
+ * '<S54>'  : 'TPGCI_STM32_2/PID Controller1/Tsamp - Integral/TsSignalSpecification'
+ * '<S55>'  : 'TPGCI_STM32_2/PID Controller1/Tsamp - Ngain/Passthrough'
+ * '<S56>'  : 'TPGCI_STM32_2/PID Controller1/postSat Signal/Forward_Path'
+ * '<S57>'  : 'TPGCI_STM32_2/PID Controller1/preSat Signal/Forward_Path'
+ * '<S58>'  : 'TPGCI_STM32_2/PID Controller4/Anti-windup'
+ * '<S59>'  : 'TPGCI_STM32_2/PID Controller4/D Gain'
+ * '<S60>'  : 'TPGCI_STM32_2/PID Controller4/External Derivative'
+ * '<S61>'  : 'TPGCI_STM32_2/PID Controller4/Filter'
+ * '<S62>'  : 'TPGCI_STM32_2/PID Controller4/Filter ICs'
+ * '<S63>'  : 'TPGCI_STM32_2/PID Controller4/I Gain'
+ * '<S64>'  : 'TPGCI_STM32_2/PID Controller4/Ideal P Gain'
+ * '<S65>'  : 'TPGCI_STM32_2/PID Controller4/Ideal P Gain Fdbk'
+ * '<S66>'  : 'TPGCI_STM32_2/PID Controller4/Integrator'
+ * '<S67>'  : 'TPGCI_STM32_2/PID Controller4/Integrator ICs'
+ * '<S68>'  : 'TPGCI_STM32_2/PID Controller4/N Copy'
+ * '<S69>'  : 'TPGCI_STM32_2/PID Controller4/N Gain'
+ * '<S70>'  : 'TPGCI_STM32_2/PID Controller4/P Copy'
+ * '<S71>'  : 'TPGCI_STM32_2/PID Controller4/Parallel P Gain'
+ * '<S72>'  : 'TPGCI_STM32_2/PID Controller4/Reset Signal'
+ * '<S73>'  : 'TPGCI_STM32_2/PID Controller4/Saturation'
+ * '<S74>'  : 'TPGCI_STM32_2/PID Controller4/Saturation Fdbk'
+ * '<S75>'  : 'TPGCI_STM32_2/PID Controller4/Sum'
+ * '<S76>'  : 'TPGCI_STM32_2/PID Controller4/Sum Fdbk'
+ * '<S77>'  : 'TPGCI_STM32_2/PID Controller4/Tracking Mode'
+ * '<S78>'  : 'TPGCI_STM32_2/PID Controller4/Tracking Mode Sum'
+ * '<S79>'  : 'TPGCI_STM32_2/PID Controller4/Tsamp - Integral'
+ * '<S80>'  : 'TPGCI_STM32_2/PID Controller4/Tsamp - Ngain'
+ * '<S81>'  : 'TPGCI_STM32_2/PID Controller4/postSat Signal'
+ * '<S82>'  : 'TPGCI_STM32_2/PID Controller4/preSat Signal'
+ * '<S83>'  : 'TPGCI_STM32_2/PID Controller4/Anti-windup/Passthrough'
+ * '<S84>'  : 'TPGCI_STM32_2/PID Controller4/D Gain/Disabled'
+ * '<S85>'  : 'TPGCI_STM32_2/PID Controller4/External Derivative/Disabled'
+ * '<S86>'  : 'TPGCI_STM32_2/PID Controller4/Filter/Disabled'
+ * '<S87>'  : 'TPGCI_STM32_2/PID Controller4/Filter ICs/Disabled'
+ * '<S88>'  : 'TPGCI_STM32_2/PID Controller4/I Gain/Internal Parameters'
+ * '<S89>'  : 'TPGCI_STM32_2/PID Controller4/Ideal P Gain/Passthrough'
+ * '<S90>'  : 'TPGCI_STM32_2/PID Controller4/Ideal P Gain Fdbk/Disabled'
+ * '<S91>'  : 'TPGCI_STM32_2/PID Controller4/Integrator/Discrete'
+ * '<S92>'  : 'TPGCI_STM32_2/PID Controller4/Integrator ICs/Internal IC'
+ * '<S93>'  : 'TPGCI_STM32_2/PID Controller4/N Copy/Disabled wSignal Specification'
+ * '<S94>'  : 'TPGCI_STM32_2/PID Controller4/N Gain/Disabled'
+ * '<S95>'  : 'TPGCI_STM32_2/PID Controller4/P Copy/Disabled'
+ * '<S96>'  : 'TPGCI_STM32_2/PID Controller4/Parallel P Gain/Internal Parameters'
+ * '<S97>'  : 'TPGCI_STM32_2/PID Controller4/Reset Signal/Disabled'
+ * '<S98>'  : 'TPGCI_STM32_2/PID Controller4/Saturation/Enabled'
+ * '<S99>'  : 'TPGCI_STM32_2/PID Controller4/Saturation Fdbk/Disabled'
+ * '<S100>' : 'TPGCI_STM32_2/PID Controller4/Sum/Sum_PI'
+ * '<S101>' : 'TPGCI_STM32_2/PID Controller4/Sum Fdbk/Disabled'
+ * '<S102>' : 'TPGCI_STM32_2/PID Controller4/Tracking Mode/Disabled'
+ * '<S103>' : 'TPGCI_STM32_2/PID Controller4/Tracking Mode Sum/Passthrough'
+ * '<S104>' : 'TPGCI_STM32_2/PID Controller4/Tsamp - Integral/TsSignalSpecification'
+ * '<S105>' : 'TPGCI_STM32_2/PID Controller4/Tsamp - Ngain/Passthrough'
+ * '<S106>' : 'TPGCI_STM32_2/PID Controller4/postSat Signal/Forward_Path'
+ * '<S107>' : 'TPGCI_STM32_2/PID Controller4/preSat Signal/Forward_Path'
+ * '<S108>' : 'TPGCI_STM32_2/PID Controller5/Anti-windup'
+ * '<S109>' : 'TPGCI_STM32_2/PID Controller5/D Gain'
+ * '<S110>' : 'TPGCI_STM32_2/PID Controller5/External Derivative'
+ * '<S111>' : 'TPGCI_STM32_2/PID Controller5/Filter'
+ * '<S112>' : 'TPGCI_STM32_2/PID Controller5/Filter ICs'
+ * '<S113>' : 'TPGCI_STM32_2/PID Controller5/I Gain'
+ * '<S114>' : 'TPGCI_STM32_2/PID Controller5/Ideal P Gain'
+ * '<S115>' : 'TPGCI_STM32_2/PID Controller5/Ideal P Gain Fdbk'
+ * '<S116>' : 'TPGCI_STM32_2/PID Controller5/Integrator'
+ * '<S117>' : 'TPGCI_STM32_2/PID Controller5/Integrator ICs'
+ * '<S118>' : 'TPGCI_STM32_2/PID Controller5/N Copy'
+ * '<S119>' : 'TPGCI_STM32_2/PID Controller5/N Gain'
+ * '<S120>' : 'TPGCI_STM32_2/PID Controller5/P Copy'
+ * '<S121>' : 'TPGCI_STM32_2/PID Controller5/Parallel P Gain'
+ * '<S122>' : 'TPGCI_STM32_2/PID Controller5/Reset Signal'
+ * '<S123>' : 'TPGCI_STM32_2/PID Controller5/Saturation'
+ * '<S124>' : 'TPGCI_STM32_2/PID Controller5/Saturation Fdbk'
+ * '<S125>' : 'TPGCI_STM32_2/PID Controller5/Sum'
+ * '<S126>' : 'TPGCI_STM32_2/PID Controller5/Sum Fdbk'
+ * '<S127>' : 'TPGCI_STM32_2/PID Controller5/Tracking Mode'
+ * '<S128>' : 'TPGCI_STM32_2/PID Controller5/Tracking Mode Sum'
+ * '<S129>' : 'TPGCI_STM32_2/PID Controller5/Tsamp - Integral'
+ * '<S130>' : 'TPGCI_STM32_2/PID Controller5/Tsamp - Ngain'
+ * '<S131>' : 'TPGCI_STM32_2/PID Controller5/postSat Signal'
+ * '<S132>' : 'TPGCI_STM32_2/PID Controller5/preSat Signal'
+ * '<S133>' : 'TPGCI_STM32_2/PID Controller5/Anti-windup/Passthrough'
+ * '<S134>' : 'TPGCI_STM32_2/PID Controller5/D Gain/Disabled'
+ * '<S135>' : 'TPGCI_STM32_2/PID Controller5/External Derivative/Disabled'
+ * '<S136>' : 'TPGCI_STM32_2/PID Controller5/Filter/Disabled'
+ * '<S137>' : 'TPGCI_STM32_2/PID Controller5/Filter ICs/Disabled'
+ * '<S138>' : 'TPGCI_STM32_2/PID Controller5/I Gain/Internal Parameters'
+ * '<S139>' : 'TPGCI_STM32_2/PID Controller5/Ideal P Gain/Passthrough'
+ * '<S140>' : 'TPGCI_STM32_2/PID Controller5/Ideal P Gain Fdbk/Disabled'
+ * '<S141>' : 'TPGCI_STM32_2/PID Controller5/Integrator/Discrete'
+ * '<S142>' : 'TPGCI_STM32_2/PID Controller5/Integrator ICs/Internal IC'
+ * '<S143>' : 'TPGCI_STM32_2/PID Controller5/N Copy/Disabled wSignal Specification'
+ * '<S144>' : 'TPGCI_STM32_2/PID Controller5/N Gain/Disabled'
+ * '<S145>' : 'TPGCI_STM32_2/PID Controller5/P Copy/Disabled'
+ * '<S146>' : 'TPGCI_STM32_2/PID Controller5/Parallel P Gain/Internal Parameters'
+ * '<S147>' : 'TPGCI_STM32_2/PID Controller5/Reset Signal/Disabled'
+ * '<S148>' : 'TPGCI_STM32_2/PID Controller5/Saturation/Passthrough'
+ * '<S149>' : 'TPGCI_STM32_2/PID Controller5/Saturation Fdbk/Disabled'
+ * '<S150>' : 'TPGCI_STM32_2/PID Controller5/Sum/Sum_PI'
+ * '<S151>' : 'TPGCI_STM32_2/PID Controller5/Sum Fdbk/Disabled'
+ * '<S152>' : 'TPGCI_STM32_2/PID Controller5/Tracking Mode/Disabled'
+ * '<S153>' : 'TPGCI_STM32_2/PID Controller5/Tracking Mode Sum/Passthrough'
+ * '<S154>' : 'TPGCI_STM32_2/PID Controller5/Tsamp - Integral/TsSignalSpecification'
+ * '<S155>' : 'TPGCI_STM32_2/PID Controller5/Tsamp - Ngain/Passthrough'
+ * '<S156>' : 'TPGCI_STM32_2/PID Controller5/postSat Signal/Forward_Path'
+ * '<S157>' : 'TPGCI_STM32_2/PID Controller5/preSat Signal/Forward_Path'
+ */
+#endif                                 /* TPGCI_STM32_2_h_ */
+
+/*
+ * File trailer for generated code.
+ *
+ * [EOF]
+ */

@@ -5,16 +5,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Drivers/Simulink/TPGCI_STM32.c \
-../Drivers/Simulink/TPGCI_STM32_data.c 
+../Drivers/Simulink/TPGCI_2.c 
 
 OBJS += \
-./Drivers/Simulink/TPGCI_STM32.o \
-./Drivers/Simulink/TPGCI_STM32_data.o 
+./Drivers/Simulink/TPGCI_2.o 
 
 C_DEPS += \
-./Drivers/Simulink/TPGCI_STM32.d \
-./Drivers/Simulink/TPGCI_STM32_data.d 
+./Drivers/Simulink/TPGCI_2.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -24,7 +21,7 @@ Drivers/Simulink/%.o Drivers/Simulink/%.su Drivers/Simulink/%.cyclo: ../Drivers/
 clean: clean-Drivers-2f-Simulink
 
 clean-Drivers-2f-Simulink:
-	-$(RM) ./Drivers/Simulink/TPGCI_STM32.cyclo ./Drivers/Simulink/TPGCI_STM32.d ./Drivers/Simulink/TPGCI_STM32.o ./Drivers/Simulink/TPGCI_STM32.su ./Drivers/Simulink/TPGCI_STM32_data.cyclo ./Drivers/Simulink/TPGCI_STM32_data.d ./Drivers/Simulink/TPGCI_STM32_data.o ./Drivers/Simulink/TPGCI_STM32_data.su
+	-$(RM) ./Drivers/Simulink/TPGCI_2.cyclo ./Drivers/Simulink/TPGCI_2.d ./Drivers/Simulink/TPGCI_2.o ./Drivers/Simulink/TPGCI_2.su
 
 .PHONY: clean-Drivers-2f-Simulink
 

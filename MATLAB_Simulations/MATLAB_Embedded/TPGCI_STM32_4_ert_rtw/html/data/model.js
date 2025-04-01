@@ -1,0 +1,1 @@
+var modelInfo = {model:"TPGCI_STM32_4"};var modelHierarchy=[{model:"TPGCI_STM32_4",relativePath:"_internal.html",parent:"null"},];var AddCode = true;

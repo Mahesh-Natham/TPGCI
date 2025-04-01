@@ -4,6 +4,7 @@ Tim8_check
 ADC1_Check
 ADC2_Check
 ADC3_Check
-VOLTAGE_R_PHASE
-VOLTAGE_Y_PHASE
-VOLTAGE_B_PHASE
+adc_time1
+adc_time2
+adc_time3
+PWMch1

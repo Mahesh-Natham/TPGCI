@@ -1,0 +1,475 @@
+/*
+ * Academic License - for use in teaching, academic research, and meeting
+ * course requirements at degree granting institutions only.  Not for
+ * government, commercial, or other organizational use.
+ *
+ * File: TPGCI_2.c
+ *
+ * Code generated for Simulink model 'TPGCI_2'.
+ *
+ * Model version                  : 1.11
+ * Simulink Coder version         : 24.1 (R2024a) 19-Nov-2023
+ * C/C++ source code generated on : Wed Mar 26 14:59:47 2025
+ *
+ * Target selection: ert.tlc
+ * Embedded hardware selection: ARM Compatible->ARM Cortex-M
+ * Code generation objectives:
+ *    1. Execution efficiency
+ *    2. RAM efficiency
+ * Validation result: Not run
+ */
+
+#include "TPGCI_2.h"
+#include <math.h>
+#include <stdbool.h>
+#include <float.h>
+#include <stdint.h>
+#include "math.h"
+
+/* Exported data definition */
+
+/* Volatile memory section */
+/* Definition for custom storage class: Volatile */
+volatile double CCR_max;               /* '<Root>/CCR_max' */
+volatile double Grid_wt;               /* '<Root>/Grid_wt' */
+volatile double Id;                    /* '<Root>/Id' */
+volatile double Id_pi_out;             /* '<Root>/Id_pi_out' */
+volatile double Id_ref;                /* '<Root>/Id_ref' */
+volatile double Iq;                    /* '<Root>/Iq' */
+volatile double Iq_ref;                /* '<Root>/Iq_ref' */
+volatile double Ma;                    /* '<Root>/Ma' */
+volatile double Mb;                    /* '<Root>/Mb' */
+volatile double Mc;                    /* '<Root>/Mc' */
+volatile double PWMCH1;                /* '<Root>/PWMCH1' */
+volatile double PWMCH2;                /* '<Root>/PWMCH2' */
+volatile double PWMCH3;                /* '<Root>/PWMCH3' */
+volatile double VDC;                   /* '<Root>/VDC' */
+volatile double Vd_g;                  /* '<Root>/Vd_g' */
+volatile double Vd_pid_out;            /* '<Root>/Vd_pid_out' */
+volatile double ia;                    /* '<Root>/ia' */
+volatile double ib;                    /* '<Root>/ib' */
+volatile double ic;                    /* '<Root>/ic' */
+volatile double phasedelay;            /* '<Root>/phasedelay' */
+volatile double va_g;                  /* '<Root>/va_g' */
+volatile double vb_g;                  /* '<Root>/vb_g' */
+volatile double vc_g;                  /* '<Root>/vc_g' */
+
+/* Block signals and states (default storage) */
+DW rtDW;
+
+/* Real-time model */
+static RT_MODEL rtM_;
+RT_MODEL *const rtM = &rtM_;
+extern double rt_modd_snf(double u0, double u1);
+static void abcto(double rtu_r, double rtu_y, double rtu_b, double *rty_alpha,
+                  double *rty_beta, double *rty_zero);
+static void todq(double rtu_alpha, double rtu_beta, double rtu_theta, double
+                 *rty_d, double *rty_q);
+static double rtGetNaN(void);
+static float rtGetNaNF(void);
+extern double rtInf;
+extern double rtMinusInf;
+extern double rtNaN;
+extern float rtInfF;
+extern float rtMinusInfF;
+extern float rtNaNF;
+static bool rtIsInf(double value);
+static bool rtIsInfF(float value);
+static bool rtIsNaN(double value);
+static bool rtIsNaNF(float value);
+double rtNaN = -(double)NAN;
+double rtInf = (double)INFINITY;
+double rtMinusInf = -(double)INFINITY;
+float rtNaNF = -(float)NAN;
+float rtInfF = (float)INFINITY;
+float rtMinusInfF = -(float)INFINITY;
+
+/* Return rtNaN needed by the generated code. */
+static double rtGetNaN(void)
+{
+  return rtNaN;
+}
+
+/* Return rtNaNF needed by the generated code. */
+static float rtGetNaNF(void)
+{
+  return rtNaNF;
+}
+
+/* Test if value is infinite */
+static bool rtIsInf(double value)
+{
+  return (bool)((value==rtInf || value==rtMinusInf) ? 1U : 0U);
+}
+
+/* Test if single-precision value is infinite */
+static bool rtIsInfF(float value)
+{
+  return (bool)(((value)==rtInfF || (value)==rtMinusInfF) ? 1U : 0U);
+}
+
+/* Test if value is not a number */
+static bool rtIsNaN(double value)
+{
+  return (bool)(isnan(value) != 0);
+}
+
+/* Test if single-precision value is not a number */
+static bool rtIsNaNF(float value)
+{
+  return (bool)(isnan(value) != 0);
+}
+
+/*
+ * Output and update for atomic system:
+ *    '<S1>/abc to &#x3B1;&#x3B2;'
+ *    '<S2>/abc to &#x3B1;&#x3B2;'
+ */
+static void abcto(double rtu_r, double rtu_y, double rtu_b, double *rty_alpha,
+                  double *rty_beta, double *rty_zero)
+{
+  *rty_alpha = (0.66666666667 * rtu_r - 0.33333333333 * rtu_y) - 0.33333333333 *
+    rtu_b;
+  *rty_beta = (rtu_y - rtu_b) * 0.57735026919;
+  *rty_zero = ((rtu_r + rtu_y) + rtu_b) * 0.33333333333;
+}
+
+/*
+ * Output and update for atomic system:
+ *    '<S1>/&#x3B1;&#x3B2; to dq'
+ *    '<S2>/&#x3B1;&#x3B2; to dq'
+ */
+static void todq(double rtu_alpha, double rtu_beta, double rtu_theta, double
+                 *rty_d, double *rty_q)
+{
+  double cos_theta;
+  double sin_theta;
+  cos_theta = cos(rtu_theta);
+  sin_theta = sin(rtu_theta);
+  *rty_d = rtu_alpha * cos_theta + rtu_beta * sin_theta;
+  *rty_q = -rtu_alpha * sin_theta + rtu_beta * cos_theta;
+}
+
+double rt_modd_snf(double u0, double u1)
+{
+  double y;
+  y = u0;
+  if (u1 == 0.0) {
+    if (u0 == 0.0) {
+      y = u1;
+    }
+  } else if (rtIsNaN(u0) || rtIsNaN(u1) || rtIsInf(u0)) {
+    y = (rtNaN);
+  } else if (u0 == 0.0) {
+    y = 0.0 / u1;
+  } else if (rtIsInf(u1)) {
+    if ((u1 < 0.0) != (u0 < 0.0)) {
+      y = u1;
+    }
+  } else {
+    bool yEq;
+    y = fmod(u0, u1);
+    yEq = (y == 0.0);
+    if ((!yEq) && (u1 > floor(u1))) {
+      double q;
+      q = fabs(u0 / u1);
+      yEq = !(fabs(q - floor(q + 0.5)) > DBL_EPSILON * q);
+    }
+
+    if (yEq) {
+      y = u1 * 0.0;
+    } else if ((u0 < 0.0) != (u1 < 0.0)) {
+      y += u1;
+    }
+  }
+
+  return y;
+}
+
+/* Model step function */
+void TPGCI_2_step(void)
+{
+  double rtb_Add;
+  double rtb_Add_h;
+  double rtb_Divide;
+  double rtb_Divide1;
+  double rtb_Filter;
+  double rtb_Integrator_j;
+  double rtb_Integrator_p;
+  double rtb_Mod;
+  double rtb_Saturation;
+  double rtb_q_o;
+  double rtb_y_d;
+  double rtb_zero_au;
+
+  /* MATLAB Function: '<S1>/abc to &#x3B1;&#x3B2;' incorporates:
+   *  Inport: '<Root>/va_g'
+   *  Inport: '<Root>/vb_g'
+   *  Inport: '<Root>/vc_g'
+   */
+  abcto(va_g, vb_g, vc_g, &rtb_Filter, &rtb_Integrator_p, &rtb_zero_au);
+
+  /* Math: '<S1>/Mod' incorporates:
+   *  Constant: '<S1>/Constant1'
+   *  DiscreteIntegrator: '<S1>/Discrete-Time Integrator'
+   */
+  rtb_Mod = rt_modd_snf(rtDW.DiscreteTimeIntegrator_DSTATE, -6.2831853071795862);
+
+  /* MATLAB Function: '<S1>/&#x3B1;&#x3B2; to dq' */
+  todq(rtb_Filter, rtb_Integrator_p, rtb_Mod, &rtb_Add_h, &rtb_q_o);
+
+  /* MATLAB Function: '<S1>/Moving RMS Exp' */
+  if (!rtDW.rmsSquared_not_empty_e) {
+    rtDW.rmsSquared_n = rtb_Add_h * rtb_Add_h;
+    rtDW.rmsSquared_not_empty_e = true;
+  }
+
+  rtDW.rmsSquared_n = rtb_Add_h * rtb_Add_h * 0.001 + 0.999 * rtDW.rmsSquared_n;
+  rtb_y_d = sqrt(rtDW.rmsSquared_n);
+
+  /* End of MATLAB Function: '<S1>/Moving RMS Exp' */
+
+  /* Outport: '<Root>/Vd_g' */
+  Vd_g = rtb_y_d;
+
+  /* MATLAB Function: '<S2>/abc to &#x3B1;&#x3B2;' incorporates:
+   *  Inport: '<Root>/ia'
+   *  Inport: '<Root>/ib'
+   *  Inport: '<Root>/ic'
+   */
+  abcto(ia, ic, ib, &rtb_Filter, &rtb_Integrator_p, &rtb_zero_au);
+
+  /* MATLAB Function: '<S2>/&#x3B1;&#x3B2; to dq' incorporates:
+   *  Outport: '<Root>/Iq'
+   */
+  todq(rtb_Filter, rtb_Integrator_p, rtb_Mod, &rtb_Add_h, (double *)&Iq);
+
+  /* MATLAB Function: '<S2>/Moving RMS Exp' */
+  if (!rtDW.rmsSquared_not_empty) {
+    rtDW.rmsSquared = rtb_Add_h * rtb_Add_h;
+    rtDW.rmsSquared_not_empty = true;
+  }
+
+  rtDW.rmsSquared = rtb_Add_h * rtb_Add_h * 0.001 + 0.999 * rtDW.rmsSquared;
+  rtb_zero_au = sqrt(rtDW.rmsSquared);
+
+  /* End of MATLAB Function: '<S2>/Moving RMS Exp' */
+
+  /* Sum: '<S3>/Sum1' incorporates:
+   *  Inport: '<Root>/Id_ref'
+   */
+  rtb_Integrator_p = Id_ref - rtb_zero_au;
+
+  /* Sum: '<S106>/Sum' incorporates:
+   *  DiscreteIntegrator: '<S97>/Integrator'
+   *  Gain: '<S102>/Proportional Gain'
+   */
+  rtb_Saturation = 0.01 * rtb_Integrator_p + rtDW.Integrator_DSTATE;
+
+  /* Saturate: '<S104>/Saturation' */
+  if (rtb_Saturation > 10.0) {
+    rtb_Saturation = 10.0;
+  } else if (rtb_Saturation < -10.0) {
+    rtb_Saturation = -10.0;
+  }
+
+  /* End of Saturate: '<S104>/Saturation' */
+
+  /* Sum: '<S3>/Sum3' incorporates:
+   *  Gain: '<S3>/Gain1'
+   *  Outport: '<Root>/Iq'
+   *  Sum: '<S3>/Sum2'
+   */
+  rtb_Integrator_j = (0.15707963267948966 * Iq + rtb_Saturation) + rtb_y_d;
+
+  /* Product: '<S3>/Divide' incorporates:
+   *  Gain: '<S3>/Gain3'
+   *  Inport: '<Root>/VDC'
+   */
+  rtb_Divide = 2.0 * rtb_Integrator_j / VDC;
+
+  /* Sum: '<S3>/Sum4' incorporates:
+   *  Inport: '<Root>/Iq_ref'
+   *  Outport: '<Root>/Iq'
+   */
+  rtb_y_d = Iq_ref - Iq;
+
+  /* Sum: '<S156>/Sum' incorporates:
+   *  DiscreteIntegrator: '<S147>/Integrator'
+   *  Gain: '<S152>/Proportional Gain'
+   */
+  rtb_Filter = 0.01 * rtb_y_d + rtDW.Integrator_DSTATE_e;
+
+  /* Saturate: '<S154>/Saturation' */
+  if (rtb_Filter > 10.0) {
+    rtb_Filter = 10.0;
+  } else if (rtb_Filter < -10.0) {
+    rtb_Filter = -10.0;
+  }
+
+  /* Product: '<S3>/Divide1' incorporates:
+   *  Gain: '<S3>/Gain2'
+   *  Gain: '<S3>/Gain4'
+   *  Inport: '<Root>/VDC'
+   *  Saturate: '<S154>/Saturation'
+   *  Sum: '<S3>/Sum5'
+   *  Sum: '<S3>/Sum6'
+   */
+  rtb_Divide1 = ((rtb_Filter - 0.15707963267948966 * rtb_zero_au) + rtb_q_o) *
+    2.0 / VDC;
+
+  /* Sum: '<S3>/Add' incorporates:
+   *  Inport: '<Root>/phasedelay'
+   */
+  rtb_Add = rtb_Mod + phasedelay;
+
+  /* MATLAB Function: '<S3>/dq to abc' */
+  rtb_Filter = rtb_Divide * cos(rtb_Add) - rtb_Divide1 * sin(rtb_Add);
+
+  /* Saturate: '<S3>/Saturation2' */
+  if (rtb_Filter > 0.95) {
+    rtb_Filter = 0.95;
+  } else if (rtb_Filter < -0.95) {
+    rtb_Filter = -0.95;
+  }
+
+  /* End of Saturate: '<S3>/Saturation2' */
+
+  /* Outport: '<Root>/PWMCH1' incorporates:
+   *  Constant: '<S3>/offset'
+   *  Constant: '<S3>/scaling'
+   *  Inport: '<Root>/CCR_max'
+   *  Product: '<S3>/Divide2'
+   *  Product: '<S3>/Product'
+   *  Sum: '<S3>/Add1'
+   */
+  PWMCH1 = (rtb_Filter + 1.0) / 2.0 * CCR_max;
+
+  /* MATLAB Function: '<S3>/dq to abc' */
+  rtb_Add_h = cos(rtb_Add - 2.0943951023931948) * rtb_Divide - sin(rtb_Add -
+    2.0943951023931948) * rtb_Divide1;
+
+  /* Saturate: '<S3>/Saturation1' */
+  if (rtb_Add_h > 0.95) {
+    rtb_Add_h = 0.95;
+  } else if (rtb_Add_h < -0.95) {
+    rtb_Add_h = -0.95;
+  }
+
+  /* End of Saturate: '<S3>/Saturation1' */
+
+  /* Outport: '<Root>/PWMCH2' incorporates:
+   *  Constant: '<S3>/offset'
+   *  Constant: '<S3>/scaling'
+   *  Inport: '<Root>/CCR_max'
+   *  Product: '<S3>/Divide3'
+   *  Product: '<S3>/Product1'
+   *  Sum: '<S3>/Add2'
+   */
+  PWMCH2 = (rtb_Add_h + 1.0) / 2.0 * CCR_max;
+
+  /* Outport: '<Root>/Mb' */
+  Mb = rtb_Add_h;
+
+  /* MATLAB Function: '<S3>/dq to abc' */
+  rtb_Add_h = cos(rtb_Add + 2.0943951023931948) * rtb_Divide - sin(rtb_Add +
+    2.0943951023931948) * rtb_Divide1;
+
+  /* Saturate: '<S3>/Saturation3' */
+  if (rtb_Add_h > 0.95) {
+    rtb_Add_h = 0.95;
+  } else if (rtb_Add_h < -0.95) {
+    rtb_Add_h = -0.95;
+  }
+
+  /* End of Saturate: '<S3>/Saturation3' */
+
+  /* Outport: '<Root>/PWMCH3' incorporates:
+   *  Constant: '<S3>/offset'
+   *  Constant: '<S3>/scaling'
+   *  Inport: '<Root>/CCR_max'
+   *  Product: '<S3>/Divide4'
+   *  Product: '<S3>/Product2'
+   *  Sum: '<S3>/Add3'
+   */
+  PWMCH3 = (rtb_Add_h + 1.0) / 2.0 * CCR_max;
+
+  /* Outport: '<Root>/Mc' */
+  Mc = rtb_Add_h;
+
+  /* Outport: '<Root>/Ma' */
+  Ma = rtb_Filter;
+
+  /* Outport: '<Root>/Vd_pid_out' */
+  Vd_pid_out = rtb_Integrator_j;
+
+  /* Outport: '<Root>/Id_pi_out' */
+  Id_pi_out = rtb_Saturation;
+
+  /* Outport: '<Root>/Id' */
+  Id = rtb_zero_au;
+
+  /* Gain: '<S44>/Filter Coefficient' incorporates:
+   *  Constant: '<S1>/Constant'
+   *  DiscreteIntegrator: '<S36>/Filter'
+   *  Gain: '<S34>/Derivative Gain'
+   *  Sum: '<S1>/Add'
+   *  Sum: '<S36>/SumD'
+   */
+  rtb_Filter = ((0.0 - rtb_q_o) * 0.0 - rtDW.Filter_DSTATE) * 100.0;
+
+  /* Outport: '<Root>/Grid_wt' */
+  Grid_wt = rtb_Mod;
+
+  /* Update for DiscreteIntegrator: '<S1>/Discrete-Time Integrator' incorporates:
+   *  Constant: '<S1>/Constant'
+   *  DiscreteIntegrator: '<S41>/Integrator'
+   *  Gain: '<S46>/Proportional Gain'
+   *  Sum: '<S1>/Add'
+   *  Sum: '<S50>/Sum'
+   */
+  rtDW.DiscreteTimeIntegrator_DSTATE += (((0.0 - rtb_q_o) * 10.0 +
+    rtDW.Integrator_DSTATE_p) + rtb_Filter) * 2.0E-5;
+
+  /* Update for DiscreteIntegrator: '<S97>/Integrator' */
+  rtDW.Integrator_DSTATE += 2.0E-5 * rtb_Integrator_p;
+  if (rtDW.Integrator_DSTATE > 10.0) {
+    rtDW.Integrator_DSTATE = 10.0;
+  } else if (rtDW.Integrator_DSTATE < -10.0) {
+    rtDW.Integrator_DSTATE = -10.0;
+  }
+
+  /* End of Update for DiscreteIntegrator: '<S97>/Integrator' */
+
+  /* Update for DiscreteIntegrator: '<S147>/Integrator' */
+  rtDW.Integrator_DSTATE_e += 2.0E-5 * rtb_y_d;
+  if (rtDW.Integrator_DSTATE_e > 10.0) {
+    rtDW.Integrator_DSTATE_e = 10.0;
+  } else if (rtDW.Integrator_DSTATE_e < -10.0) {
+    rtDW.Integrator_DSTATE_e = -10.0;
+  }
+
+  /* End of Update for DiscreteIntegrator: '<S147>/Integrator' */
+
+  /* Update for DiscreteIntegrator: '<S36>/Filter' */
+  rtDW.Filter_DSTATE += 2.0E-5 * rtb_Filter;
+
+  /* Update for DiscreteIntegrator: '<S41>/Integrator' incorporates:
+   *  Constant: '<S1>/Constant'
+   *  Gain: '<S38>/Integral Gain'
+   *  Sum: '<S1>/Add'
+   */
+  rtDW.Integrator_DSTATE_p += (0.0 - rtb_q_o) * 1000.0 * 2.0E-5;
+}
+
+/* Model initialize function */
+void TPGCI_2_initialize(void)
+{
+  /* (no initialization code required) */
+}
+
+/*
+ * File trailer for generated code.
+ *
+ * [EOF]
+ */

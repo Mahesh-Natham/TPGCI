@@ -26,5 +26,4 @@
 "./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.o"
 "./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.o"
 "./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.o"
-"./Drivers/Simulink/TPGCI_STM32.o"
-"./Drivers/Simulink/TPGCI_STM32_data.o"
+"./Drivers/Simulink/TPGCI_2.o"

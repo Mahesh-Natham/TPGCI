@@ -22,7 +22,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "butterworth_filter.h"
-#include "TPGCI_STM32.h"               /* Model header file */
+//#include "TPGCI_STM32.h"               /* Model header file */
+#include "TPGCI_2.h"
+//#include "TPGCI_STM32_2.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,12 +59,12 @@ TIM_HandleTypeDef htim8;
 //********************************** Main inputs ******************************//
 float VDC_i=400;
 float CCR_max_i = 1375;
-float Id_ref_i = -5;
+float Id_ref_i = 3;
 float Iq_ref_i = 0;
 float r_ph_shift=0;
 float y_ph_shift=0;
 float b_ph_shift=0;
-float phasedelay_i = 16;
+float phasedelay_i = 0;
 // ******************** Analog to Digital conversion variables **************************//
 float VOLTAGE_R_PHASE 	= 0.0;		//ADC1 Channel 2 pin PF11
 float VOLTAGE_Y_PHASE 	= 0.0;		//ADC1 Channel 3 pin PA6
@@ -79,9 +81,9 @@ float CURRENT_B_PHASE 	= 0.0;		//ADC1 Channel 6 pin PF12
 float CURRENT_R_OFFSET  = 2.0;
 float CURRENT_Y_OFFSET  = 2.0;
 float CURRENT_B_OFFSET  = 2.0;
-float CURRENT_R_GAIN	= 8.87221255199;
-float CURRENT_Y_GAIN 	= 8.87221255199;
-float CURRENT_B_GAIN 	= 8.87221255199;
+float CURRENT_R_GAIN	= 9;
+float CURRENT_Y_GAIN 	= 9;
+float CURRENT_B_GAIN 	= 9;
 float DC_Voltage = 0.0f;
 float DC_Current = 0.0f;
 float DC_Voltage_Gain = 0.0f;
@@ -112,6 +114,8 @@ float CurrentY_Input[3] = {0.0f, 0.0f, 0.0f};
 float CurrentY_Output[3] = {0.0f, 0.0f, 0.0f};
 float CurrentB_Input[3] = {0.0f, 0.0f, 0.0f};
 float CurrentB_Output[3] = {0.0f, 0.0f, 0.0f};
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -195,8 +199,9 @@ int main(void)
   HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
   HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3);
-
-  TPGCI_STM32_initialize();
+  TPGCI_2_initialize();
+//  TPGCI_STM32_initialize();
+//  TPGCI_STM32_2_initialize();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -282,7 +287,7 @@ void PeriphCommonClock_Config(void)
   PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_ADC;
   PeriphClkInitStruct.PLL2.PLL2M = 1;
   PeriphClkInitStruct.PLL2.PLL2N = 24;
-  PeriphClkInitStruct.PLL2.PLL2P = 8;
+  PeriphClkInitStruct.PLL2.PLL2P = 10;
   PeriphClkInitStruct.PLL2.PLL2Q = 2;
   PeriphClkInitStruct.PLL2.PLL2R = 2;
   PeriphClkInitStruct.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_3;
@@ -317,16 +322,16 @@ static void MX_ADC1_Init(void)
   /** Common config
   */
   hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV4;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
   hadc1.Init.Resolution = ADC_RESOLUTION_16B;
   hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
-  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
-  hadc1.Init.ContinuousConvMode = ENABLE;
+  hadc1.Init.ContinuousConvMode = DISABLE;
   hadc1.Init.NbrOfConversion = 3;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
-  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIG_T1_TRGO;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
   hadc1.Init.ConversionDataManagement = ADC_CONVERSIONDATA_DMA_CIRCULAR;
   hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc1.Init.LeftBitShift = ADC_LEFTBITSHIFT_NONE;
@@ -349,7 +354,7 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_2;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_32CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -403,16 +408,16 @@ static void MX_ADC2_Init(void)
   /** Common config
   */
   hadc2.Instance = ADC2;
-  hadc2.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV4;
+  hadc2.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
   hadc2.Init.Resolution = ADC_RESOLUTION_16B;
   hadc2.Init.ScanConvMode = ADC_SCAN_ENABLE;
-  hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc2.Init.EOCSelection = ADC_EOC_SEQ_CONV;
   hadc2.Init.LowPowerAutoWait = DISABLE;
-  hadc2.Init.ContinuousConvMode = ENABLE;
+  hadc2.Init.ContinuousConvMode = DISABLE;
   hadc2.Init.NbrOfConversion = 3;
   hadc2.Init.DiscontinuousConvMode = DISABLE;
-  hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc2.Init.ExternalTrigConv = ADC_EXTERNALTRIG_T1_TRGO;
+  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
   hadc2.Init.ConversionDataManagement = ADC_CONVERSIONDATA_DMA_CIRCULAR;
   hadc2.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc2.Init.LeftBitShift = ADC_LEFTBITSHIFT_NONE;
@@ -427,7 +432,7 @@ static void MX_ADC2_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_2;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_32CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -481,24 +486,24 @@ static void MX_ADC3_Init(void)
   /** Common config
   */
   hadc3.Instance = ADC3;
-  hadc3.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV12;
+  hadc3.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
   hadc3.Init.Resolution = ADC_RESOLUTION_12B;
   hadc3.Init.DataAlign = ADC3_DATAALIGN_RIGHT;
   hadc3.Init.ScanConvMode = ADC_SCAN_ENABLE;
-  hadc3.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc3.Init.EOCSelection = ADC_EOC_SEQ_CONV;
   hadc3.Init.LowPowerAutoWait = DISABLE;
-  hadc3.Init.ContinuousConvMode = ENABLE;
+  hadc3.Init.ContinuousConvMode = DISABLE;
   hadc3.Init.NbrOfConversion = 2;
   hadc3.Init.DiscontinuousConvMode = DISABLE;
-  hadc3.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-  hadc3.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc3.Init.ExternalTrigConv = ADC_EXTERNALTRIG_T1_TRGO;
+  hadc3.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
   hadc3.Init.DMAContinuousRequests = ENABLE;
   hadc3.Init.SamplingMode = ADC_SAMPLING_MODE_NORMAL;
   hadc3.Init.ConversionDataManagement = ADC_CONVERSIONDATA_DMA_CIRCULAR;
   hadc3.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc3.Init.LeftBitShift = ADC_LEFTBITSHIFT_NONE;
   hadc3.Init.OversamplingMode = DISABLE;
-  hadc3.Init.Oversampling.Ratio = ADC3_OVERSAMPLING_RATIO_4;
+  hadc3.Init.Oversampling.Ratio = ADC3_OVERSAMPLING_RATIO_2;
   if (HAL_ADC_Init(&hadc3) != HAL_OK)
   {
     Error_Handler();
@@ -508,7 +513,7 @@ static void MX_ADC3_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC3_SAMPLETIME_47CYCLES_5;
+  sConfig.SamplingTime = ADC3_SAMPLETIME_2CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -520,6 +525,7 @@ static void MX_ADC3_Init(void)
 
   /** Configure Regular Channel
   */
+  sConfig.Channel = ADC_CHANNEL_2;
   sConfig.Rank = ADC_REGULAR_RANK_2;
   if (HAL_ADC_ConfigChannel(&hadc3, &sConfig) != HAL_OK)
   {
@@ -571,7 +577,7 @@ static void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
   sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
@@ -638,9 +644,9 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 9;
+  htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 1100;
+  htim2.Init.Period = 6875;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -763,24 +769,25 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, PWMch1);
     	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, PWMch2);
     	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, PWMch3);
-    	Tim1_check++;
-    }
-    if (htim->Instance == TIM2) {
-    	Va_g=VOLTAGE_R_PHASE;
-    	Vb_g=VOLTAGE_Y_PHASE;
-        Vc_g=VOLTAGE_B_PHASE;
-        Ia_g=0; //CURRENT_R_PHASE
-        Ib_g=0; //CURRENT_Y_PHASE
-        Ic_g=0; //CURRENT_B_PHASE
-    	TPGCI_STM32_step();
-    	Tim2_check++;
-    }
-    if (htim->Instance == TIM8) {
-        VDC=VDC_i;
+    	VDC=VDC_i;
         CCR_max = CCR_max_i;
         Id_ref = Id_ref_i;
         Iq_ref = Iq_ref_i;
         phasedelay = phasedelay_i;
+    	Tim1_check++;
+    }
+    if (htim->Instance == TIM2) {
+    	va_g=VOLTAGE_R_PHASE;
+    	vb_g=VOLTAGE_Y_PHASE;
+        vc_g=VOLTAGE_B_PHASE;
+        ia_g=CURRENT_R_PHASE; //CURRENT_R_PHASE
+        ib_g=CURRENT_Y_PHASE; //CURRENT_Y_PHASE
+        ic_g=CURRENT_B_PHASE; //CURRENT_B_PHASE
+        TPGCI_2_step();
+    	Tim2_check++;
+    }
+    if (htim->Instance == TIM8) {
+
     	Tim8_check++;
     }
 }
@@ -801,12 +808,9 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
     }
     if (hadc->Instance == ADC2)
     {
-//    	float rawIR = ((((float)CurrentadcBuffer[0] * VREF) / ADC_16bRESOLUTION)-CURRENT_R_OFFSET)*CURRENT_R_GAIN;
-//    	float rawIY = ((((float)CurrentadcBuffer[1] * VREF) / ADC_16bRESOLUTION)-CURRENT_Y_OFFSET)*CURRENT_Y_GAIN;
-//    	float rawIB = ((((float)CurrentadcBuffer[2] * VREF) / ADC_16bRESOLUTION)-CURRENT_B_OFFSET)*CURRENT_B_GAIN;
-    	float rawIR = (((float)CurrentadcBuffer[0] * VREF) / ADC_16bRESOLUTION)-CURRENT_R_OFFSET;
-    	float rawIY = (((float)CurrentadcBuffer[1] * VREF) / ADC_16bRESOLUTION)-CURRENT_Y_OFFSET;
-    	float rawIB = (((float)CurrentadcBuffer[2] * VREF) / ADC_16bRESOLUTION)-CURRENT_B_OFFSET;
+    	float rawIR = ((((float)CurrentadcBuffer[0] * VREF) / ADC_16bRESOLUTION)-CURRENT_R_OFFSET)*CURRENT_R_GAIN;
+    	float rawIY = ((((float)CurrentadcBuffer[1] * VREF) / ADC_16bRESOLUTION)-CURRENT_Y_OFFSET)*CURRENT_Y_GAIN;
+    	float rawIB = ((((float)CurrentadcBuffer[2] * VREF) / ADC_16bRESOLUTION)-CURRENT_B_OFFSET)*CURRENT_B_GAIN;
     	CURRENT_R_PHASE = applyLowPassFilter(rawIR, CurrentR_Input, CurrentR_Output);
     	CURRENT_Y_PHASE = applyLowPassFilter(rawIY, CurrentY_Input, CurrentY_Output);
     	CURRENT_B_PHASE = applyLowPassFilter(rawIB, CurrentB_Input, CurrentB_Output);
